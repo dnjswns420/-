@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>부산 바다, 오늘</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =========================
+         상단 헤더
+    ========================== -->
+
+    <header class="header">
+
+        <div class="logo">
+            🌊 부산 바다, 오늘
+        </div>
+
+        <button class="menu-button" onclick="toggleMenu()">
+            ☰
+        </button>
+
+    </header>
+
+
+    <!-- =========================
+         메뉴
+    ========================== -->
+
+    <nav id="menu" class="menu">
+
+        <button onclick="showPage('home')">
+            🏠 홈
+        </button>
+
+        <button onclick="showPage('map')">
+            📍 해양 명소
+        </button>
+
+        <button onclick="showPage('course')">
+            🧭 여행 코스
+        </button>
+
+        <button onclick="showPage('favorite')">
+            ❤️ 즐겨찾기
+        </button>
+
+        <button onclick="showPage('mycourse')">
+            ✏️ 나만의 코스
+        </button>
+
+    </nav>
+
+
+    <!-- =========================
+         메인
+    ========================== -->
+
+    <main>
+
+        <!-- 홈 -->
+
+        <section id="home" class="page active">
+
+            <div class="hero">
+
+                <p class="small-title">
+                    BUSAN MARINE ECO TOUR
+                </p>
+
+                <h1>
+                    부산 바다를<br>
+                    더 특별하게
+                </h1>
+
+                <p>
+                    부산의 해양 생태 관광지를 찾고<br>
+                    나에게 맞는 여행 코스를 추천받아보세요.
+                </p>
+
+            </div>
+
+
+            <!-- 검색 -->
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="관광지나 장소를 검색해보세요"
+                >
+
+                <button onclick="searchPlace()">
+                    🔎
+                </button>
+
+            </div>
+
+
+            <!-- 오늘의 추천 -->
+
+            <h2>🌊 오늘의 추천</h2>
+
+            <div class="card-container">
+
+                <div class="place-card">
+
+                    <div class="place-image">
+                        🏝️
+                    </div>
+
+                    <div class="place-info">
+
+                        <h3>을숙도</h3>
+
+                        <p>
+                            낙동강 하구의 대표적인 생태 관광지
+                        </p>
+
+                        <button onclick="openPlace('을숙도')">
+                            자세히 보기
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="place-card">
+
+                    <div class="place-image">
+                        🌊
+                    </div>
+
+                    <div class="place-info">
+
+                        <h3>다대포해수욕장</h3>
+
+                        <p>
+                            넓은 해변과 낙동강 하구가 만나는 장소
+                        </p>
+
+                        <button onclick="openPlace('다대포해수욕장')">
+                            자세히 보기
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- AI 추천 -->
+
+            <div class="ai-box">
+
+                <div class="ai-icon">
+                    🤖
+                </div>
+
+                <div>
+
+                    <h2>AI 여행 추천</h2>
+
+                    <p>
+                        지금 어디에 있는지 알려주시면<br>
+                        나에게 맞는 부산 해양 여행 코스를 추천해드릴게요.
+                    </p>
+
+                </div>
+
+                <button onclick="aiRecommend()">
+                    AI 추천받기
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- 지도 -->
+
+        <section id="map" class="page">
+
+            <h1>📍 해양 명소</h1>
+
+            <p>
+                부산의 해양 생태 관광지를 지도에서 확인해보세요.
+            </p>
+
+            <div id="mapArea" class="map-area">
+
+                <div class="map-message">
+                    🗺️<br>
+                    지도는 다음 단계에서 연결합니다.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- 여행 코스 -->
+
+        <section id="course" class="page">
+
+            <h1>🧭 여행 코스</h1>
+
+            <div class="course-card">
+
+                <h2>🌊 해양 생태 반나절 코스</h2>
+
+                <p>
+                    을숙도 → 다대포해수욕장
+                </p>
+
+                <button onclick="startCourse()">
+                    코스 보기
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- 즐겨찾기 -->
+
+        <section id="favorite" class="page">
+
+            <h1>❤️ 즐겨찾기</h1>
+
+            <div id="favoriteList">
+
+                <p>
+                    아직 저장한 장소가 없습니다.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- 나만의 코스 -->
+
+        <section id="mycourse" class="page">
+
+            <h1>✏️ 나만의 코스</h1>
+
+            <p>
+                마음에 드는 관광지를 선택해서<br>
+                나만의 부산 여행 코스를 만들어보세요.
+            </p>
+
+            <button onclick="createCourse()">
+                나만의 코스 만들기
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         하단 네비게이션
+    ========================== -->
+
+    <footer class="bottom-nav">
+
+        <button onclick="showPage('home')">
+            🏠
+            <span>홈</span>
+        </button>
+
+        <button onclick="showPage('map')">
+            🗺️
+            <span>지도</span>
+        </button>
+
+        <button onclick="showPage('course')">
+            🧭
+            <span>코스</span>
+        </button>
+
+        <button onclick="showPage('favorite')">
+            ❤️
+            <span>즐겨찾기</span>
+        </button>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
