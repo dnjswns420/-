@@ -1,15 +1,29 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>부산 바다, 오늘</title>
 
+    <!-- 내 CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Leaflet 지도 CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
 </head>
 
+
 <body>
+
 
     <!-- =========================
          상단 헤더
@@ -21,8 +35,12 @@
             🌊 부산 바다, 오늘
         </div>
 
-        <button class="menu-button" onclick="toggleMenu()">
+        <button
+            class="menu-button"
+            onclick="toggleMenu()">
+
             ☰
+
         </button>
 
     </header>
@@ -63,9 +81,14 @@
 
     <main>
 
-        <!-- 홈 -->
 
-        <section id="home" class="page active">
+        <!-- =========================
+             홈
+        ========================== -->
+
+        <section
+            id="home"
+            class="page active">
 
             <div class="hero">
 
@@ -79,7 +102,7 @@
                 </h1>
 
                 <p>
-                    부산의 해양 생태 관광지를 찾고<br>
+                    부산의 해양 생태 관광지를 찾고
                     나에게 맞는 여행 코스를 추천받아보세요.
                 </p>
 
@@ -103,11 +126,15 @@
             </div>
 
 
-            <!-- 오늘의 추천 -->
+            <!-- 추천 -->
 
-            <h2>🌊 오늘의 추천</h2>
+            <h2>
+                🌊 오늘의 추천
+            </h2>
+
 
             <div class="card-container">
+
 
                 <div class="place-card">
 
@@ -117,14 +144,19 @@
 
                     <div class="place-info">
 
-                        <h3>을숙도</h3>
+                        <h3>
+                            을숙도
+                        </h3>
 
                         <p>
                             낙동강 하구의 대표적인 생태 관광지
                         </p>
 
-                        <button onclick="openPlace('을숙도')">
+                        <button
+                            onclick="openPlace('을숙도')">
+
                             자세히 보기
+
                         </button>
 
                     </div>
@@ -140,24 +172,30 @@
 
                     <div class="place-info">
 
-                        <h3>다대포해수욕장</h3>
+                        <h3>
+                            다대포해수욕장
+                        </h3>
 
                         <p>
                             넓은 해변과 낙동강 하구가 만나는 장소
                         </p>
 
-                        <button onclick="openPlace('다대포해수욕장')">
+                        <button
+                            onclick="openPlace('다대포해수욕장')">
+
                             자세히 보기
+
                         </button>
 
                     </div>
 
                 </div>
 
+
             </div>
 
 
-            <!-- AI 추천 -->
+            <!-- AI -->
 
             <div class="ai-box">
 
@@ -167,10 +205,12 @@
 
                 <div>
 
-                    <h2>AI 여행 추천</h2>
+                    <h2>
+                        AI 여행 추천
+                    </h2>
 
                     <p>
-                        지금 어디에 있는지 알려주시면<br>
+                        지금 어디에 있는지 알려주시면
                         나에게 맞는 부산 해양 여행 코스를 추천해드릴게요.
                     </p>
 
@@ -185,37 +225,54 @@
         </section>
 
 
-        <!-- 지도 -->
 
-        <section id="map" class="page">
+        <!-- =========================
+             지도
+        ========================== -->
 
-            <h1>📍 해양 명소</h1>
+        <section
+            id="map"
+            class="page">
+
+            <h1>
+                📍 해양 명소
+            </h1>
 
             <p>
                 부산의 해양 생태 관광지를 지도에서 확인해보세요.
             </p>
 
-            <div id="mapArea" class="map-area">
 
-                <div class="map-message">
-                    🗺️<br>
-                    지도는 다음 단계에서 연결합니다.
-                </div>
+            <!-- 실제 지도 -->
 
+            <div
+                id="mapArea"
+                class="map-area">
             </div>
+
 
         </section>
 
 
-        <!-- 여행 코스 -->
 
-        <section id="course" class="page">
+        <!-- =========================
+             여행 코스
+        ========================== -->
 
-            <h1>🧭 여행 코스</h1>
+        <section
+            id="course"
+            class="page">
+
+            <h1>
+                🧭 여행 코스
+            </h1>
+
 
             <div class="course-card">
 
-                <h2>🌊 해양 생태 반나절 코스</h2>
+                <h2>
+                    🌊 해양 생태 반나절 코스
+                </h2>
 
                 <p>
                     을숙도 → 다대포해수욕장
@@ -230,11 +287,19 @@
         </section>
 
 
-        <!-- 즐겨찾기 -->
 
-        <section id="favorite" class="page">
+        <!-- =========================
+             즐겨찾기
+        ========================== -->
 
-            <h1>❤️ 즐겨찾기</h1>
+        <section
+            id="favorite"
+            class="page">
+
+            <h1>
+                ❤️ 즐겨찾기
+            </h1>
+
 
             <div id="favoriteList">
 
@@ -247,14 +312,21 @@
         </section>
 
 
-        <!-- 나만의 코스 -->
 
-        <section id="mycourse" class="page">
+        <!-- =========================
+             나만의 코스
+        ========================== -->
 
-            <h1>✏️ 나만의 코스</h1>
+        <section
+            id="mycourse"
+            class="page">
+
+            <h1>
+                ✏️ 나만의 코스
+            </h1>
 
             <p>
-                마음에 드는 관광지를 선택해서<br>
+                마음에 드는 관광지를 선택해서
                 나만의 부산 여행 코스를 만들어보세요.
             </p>
 
@@ -264,7 +336,9 @@
 
         </section>
 
+
     </main>
+
 
 
     <!-- =========================
@@ -274,29 +348,52 @@
     <footer class="bottom-nav">
 
         <button onclick="showPage('home')">
+
             🏠
             <span>홈</span>
+
         </button>
+
 
         <button onclick="showPage('map')">
+
             🗺️
             <span>지도</span>
+
         </button>
+
 
         <button onclick="showPage('course')">
+
             🧭
             <span>코스</span>
+
         </button>
 
+
         <button onclick="showPage('favorite')">
+
             ❤️
             <span>즐겨찾기</span>
+
         </button>
 
     </footer>
 
 
+
+    <!-- Leaflet 지도 JavaScript -->
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+
+
+    <!-- 내 JavaScript -->
+
     <script src="script.js"></script>
 
+
 </body>
+
 </html>
