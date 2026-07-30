@@ -1,78 +1,50 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!DOCTYPE html><html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>부산 바다, 오늘</title><link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><style>
+*{box-sizing:border-box}
 
-<title>부산 바다, 오늘</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
-
-<!-- 지도 라이브러리 -->
-<link
-rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
-
-<style>
-
-*{
-box-sizing:border-box;
-}
-
-html,body{
+body{
 margin:0;
-padding:0;
 background:#f4ecd8;
-font-family:'Noto Sans KR',sans-serif;
-color:#0a2a2e;
+font-family:Arial,"Noto Sans KR",sans-serif;
+color:#123b3d;
 }
 
-button{
-font-family:inherit;
-}
+button{font-family:inherit;cursor:pointer}
 
 #app{
 max-width:460px;
 min-height:100vh;
 margin:auto;
 background:#f4ecd8;
-padding-bottom:85px;
+padding-bottom:80px;
 }
-
-/* =====================
- HEADER
-===================== */
 
 header{
-background:linear-gradient(145deg,#0d3d40,#071f23);
+background:#0c393d;
 color:white;
-padding:25px 22px 35px;
+padding:25px 22px 30px;
 }
 
-.eyebrow{
+.small{
 font-size:11px;
-letter-spacing:2px;
-color:#9fd3c8;
-font-weight:700;
-margin-bottom:6px;
+color:#9ed1c7;
+font-weight:bold;
+margin-bottom:7px;
 }
 
-header h1{
-font-family:'Noto Serif KR',serif;
+h1{
+margin:0 0 7px;
 font-size:27px;
-margin:0 0 5px;
 }
 
-.sub{
+.subtitle{
 font-size:12px;
-color:#bfe0d8;
+color:#c4ded8;
 }
-
-/* =====================
- PANEL
-===================== */
 
 .panel{
 display:none;
@@ -88,132 +60,117 @@ padding:20px;
 
 .label{
 font-size:12px;
-font-weight:900;
-color:#1b6e6a;
-letter-spacing:1px;
-margin-bottom:11px;
+font-weight:bold;
+color:#176c67;
+margin-bottom:10px;
 }
 
-/* =====================
- HOME
-===================== */
+/* 홈 */
 
 .trends{
 display:flex;
-gap:8px;
+gap:7px;
 overflow-x:auto;
 }
 
 .trend{
+border:1px solid #d9e1dc;
 background:white;
-border:1px solid #dfe5df;
 border-radius:20px;
-padding:8px 13px;
-font-size:12px;
-font-weight:700;
+padding:9px 13px;
+font-size:11px;
 white-space:nowrap;
 }
 
 .brief{
 background:white;
 border-radius:18px;
-padding:19px;
-box-shadow:0 7px 20px rgba(13,61,64,.1);
+padding:18px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
 }
 
 .brief h2{
-font-family:'Noto Serif KR',serif;
-font-size:20px;
-margin:0 0 5px;
+margin:0 0 7px;
+font-size:21px;
 }
 
 .brief p{
 font-size:13px;
 line-height:1.6;
-color:#49615e;
+color:#5d706d;
 }
 
 .metrics{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:8px;
-margin-top:15px;
 }
 
 .metric{
 background:#f4ecd8;
-border-radius:12px;
-padding:10px 5px;
+border-radius:11px;
 text-align:center;
+padding:10px 3px;
 }
 
 .metric strong{
 display:block;
-font-size:15px;
+font-size:14px;
 }
 
 .metric span{
-font-size:10px;
-color:#718582;
+font-size:9px;
+color:#71827f;
 }
-
-/* =====================
- BEACH
-===================== */
 
 .beaches{
 display:flex;
-gap:8px;
+gap:7px;
 overflow-x:auto;
 }
 
 .beach{
-border:1px solid #dce4df;
+border:1px solid #d5dfda;
 background:white;
-border-radius:20px;
+border-radius:18px;
 padding:8px 13px;
 white-space:nowrap;
-font-size:12px;
-font-weight:700;
 }
 
 .beach.active{
-background:#1b6e6a;
+background:#176c67;
 color:white;
 }
 
-/* =====================
- MAP
-===================== */
+/* 지도 */
 
 .map-filter{
 display:flex;
-gap:7px;
-overflow-x:auto;
+gap:6px;
 margin-bottom:10px;
+overflow-x:auto;
 }
 
 .map-filter button{
-border:1px solid #d8e0dc;
+border:1px solid #d5dfda;
 background:white;
 border-radius:20px;
 padding:8px 12px;
 font-size:11px;
-font-weight:700;
 white-space:nowrap;
 }
 
 .map-filter button.active{
-background:#1b6e6a;
+background:#176c67;
 color:white;
 }
 
-.map-box{
-position:relative;
-height:480px;
+.map-wrap{
+height:470px;
 border-radius:18px;
 overflow:hidden;
-box-shadow:0 8px 20px rgba(13,61,64,.12);
+position:relative;
+box-shadow:0 5px 15px rgba(0,0,0,.12);
 }
 
 #map{
@@ -221,68 +178,60 @@ width:100%;
 height:100%;
 }
 
-.location-button{
+.current-btn{
 position:absolute;
 right:12px;
 bottom:12px;
 z-index:1000;
 border:0;
-border-radius:12px;
 background:white;
-padding:11px 14px;
-font-size:12px;
-font-weight:900;
-box-shadow:0 3px 12px rgba(0,0,0,.2);
+border-radius:11px;
+padding:11px 13px;
+font-weight:bold;
+box-shadow:0 2px 10px rgba(0,0,0,.2);
 }
 
 .legend{
+font-size:10px;
+color:#657773;
+margin-top:9px;
 display:flex;
 gap:10px;
-flex-wrap:wrap;
-font-size:10px;
-color:#657875;
-margin-top:9px;
 }
 
-/* =====================
- PLACE CARDS
-===================== */
+/* 장소 */
 
-.card-grid{
+.grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:12px;
+gap:10px;
 }
 
-.place-card{
+.card{
 background:white;
-border-radius:16px;
 padding:15px;
-box-shadow:0 6px 16px rgba(13,61,64,.08);
-cursor:pointer;
+border-radius:15px;
+box-shadow:0 4px 12px rgba(0,0,0,.07);
 }
 
-.place-icon{
-font-size:27px;
+.card .emoji{
+font-size:25px;
 }
 
-.place-card h3{
-font-family:'Noto Serif KR',serif;
+.card h3{
 font-size:14px;
-margin:8px 0 4px;
+margin:7px 0 4px;
 }
 
-.place-card p{
-font-size:11px;
+.card p{
+font-size:10px;
+line-height:1.5;
 color:#71817e;
-margin:0;
 }
 
-/* =====================
- COURSE
-===================== */
+/* 코스 */
 
-.group-grid{
+.groups{
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:7px;
@@ -290,100 +239,88 @@ gap:7px;
 
 .group{
 background:white;
-border:1px solid #dce4df;
-border-radius:13px;
-padding:12px 4px;
+border:1px solid #d7dfdb;
+border-radius:12px;
+padding:11px 3px;
 text-align:center;
-cursor:pointer;
 }
 
 .group.active{
-background:#ef7350;
+background:#ef7653;
 color:white;
 }
 
-.group-icon{
-font-size:20px;
+.group span{
 display:block;
+font-size:18px;
+margin-bottom:3px;
 }
 
-.group-name{
-font-size:11px;
-font-weight:700;
+.group b{
+font-size:10px;
 }
 
 .course{
 background:white;
-border-radius:18px;
-padding:15px;
-box-shadow:0 7px 18px rgba(13,61,64,.08);
+border-radius:17px;
+padding:10px 15px;
+box-shadow:0 5px 15px rgba(0,0,0,.07);
 }
 
 .course-item{
+padding:14px 0;
+border-bottom:1px solid #edf0ee;
 display:flex;
 gap:10px;
-padding:13px 0;
-border-bottom:1px solid #edf0ed;
-cursor:pointer;
 }
 
 .course-item:last-child{
 border-bottom:0;
 }
 
-.course-icon{
-width:35px;
-height:35px;
+.course-number{
+width:32px;
+height:32px;
 border-radius:50%;
-background:#1b6e6a;
+background:#176c67;
 color:white;
 display:flex;
 align-items:center;
 justify-content:center;
+font-size:12px;
+font-weight:bold;
 flex-shrink:0;
 }
 
-.course-food{
-background:#ef7350;
-}
-
-.course-title{
-font-weight:800;
+.course-item h3{
 font-size:13px;
+margin:0 0 3px;
 }
 
-.course-time{
+.course-item p{
 font-size:10px;
-color:#1b6e6a;
-margin-bottom:2px;
+color:#75837f;
+margin:0;
 }
 
-.course-desc{
-font-size:11px;
-color:#71817e;
-}
-
-/* =====================
- MY COURSE
-===================== */
+/* 마이코스 */
 
 .type-buttons{
 display:flex;
 gap:8px;
-margin-bottom:12px;
 }
 
 .type-buttons button{
 flex:1;
 border:0;
-background:#eee7d5;
 padding:10px;
 border-radius:10px;
-font-weight:700;
+background:#e8e1d0;
+font-weight:bold;
 }
 
 .type-buttons button.active{
-background:#1b6e6a;
+background:#176c67;
 color:white;
 }
 
@@ -391,72 +328,59 @@ color:white;
 display:flex;
 flex-wrap:wrap;
 gap:7px;
+margin-top:12px;
 }
 
 .add-place{
 border:0;
-background:#f4ecd8;
-border-radius:20px;
+background:white;
+border-radius:18px;
 padding:8px 11px;
-font-size:11px;
-font-weight:700;
-}
-
-.my-list{
-margin-top:16px;
-}
-
-.empty{
-text-align:center;
-font-size:12px;
-color:#9aa9a6;
-padding:18px;
+font-size:10px;
 }
 
 .my-item{
 display:flex;
 align-items:center;
-gap:9px;
-background:#f4ecd8;
-border-radius:11px;
+gap:8px;
+background:white;
 padding:10px;
+border-radius:10px;
 margin-bottom:7px;
 }
 
-.my-num{
+.num{
 width:23px;
 height:23px;
-background:#1b6e6a;
 border-radius:50%;
+background:#176c67;
 color:white;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:11px;
+font-size:10px;
 }
 
 .my-name{
 flex:1;
-font-size:12px;
-font-weight:700;
+font-size:11px;
+font-weight:bold;
 }
 
 .remove{
 border:0;
-background:none;
-font-size:16px;
+background:transparent;
+font-size:15px;
 }
 
-/* =====================
- MODAL
-===================== */
+/* 모달 */
 
 .modal-bg{
 display:none;
 position:fixed;
 inset:0;
-background:rgba(0,0,0,.55);
-z-index:2000;
+background:rgba(0,0,0,.5);
+z-index:3000;
 align-items:flex-end;
 }
 
@@ -473,48 +397,45 @@ border-radius:20px 20px 0 0;
 padding:22px;
 }
 
-.modal-close{
+.close{
 float:right;
 border:0;
-background:#eee;
+border-radius:50%;
 width:30px;
 height:30px;
-border-radius:50%;
-}
-
-.modal h2{
-font-family:'Noto Serif KR',serif;
-font-size:20px;
-margin-top:15px;
 }
 
 .modal-type{
-color:#1b6e6a;
-font-size:12px;
-font-weight:700;
+font-size:11px;
+color:#176c67;
+font-weight:bold;
+margin-top:10px;
+}
+
+.modal h2{
+font-size:21px;
+margin:8px 0;
 }
 
 .modal p{
 font-size:13px;
 line-height:1.6;
-color:#536764;
+color:#647470;
 }
 
-.add-course{
+.modal-add{
 width:100%;
 border:0;
-background:#ef7350;
+background:#ef7653;
 color:white;
 padding:12px;
-border-radius:12px;
-font-weight:800;
+border-radius:10px;
+font-weight:bold;
 }
 
-/* =====================
- NAV
-===================== */
+/* 하단 */
 
-#bottom-nav{
+#nav{
 position:fixed;
 bottom:0;
 left:0;
@@ -523,560 +444,289 @@ height:70px;
 max-width:460px;
 margin:auto;
 background:white;
-border-top:1px solid #dfe5df;
+border-top:1px solid #ddd;
 display:flex;
-z-index:1500;
+z-index:2000;
 }
 
-.nav-btn{
+.nav{
 flex:1;
 border:0;
 background:white;
-color:#8c9b98;
-font-weight:700;
+color:#84918f;
 font-size:10px;
+font-weight:bold;
 }
 
-.nav-icon{
+.nav .icon{
 display:block;
 font-size:20px;
 margin-bottom:3px;
 }
 
-.nav-btn.active{
-color:#1b6e6a;
+.nav.active{
+color:#176c67;
 }
-
-</style>
-</head>
-
-
-<body>
-
-<div id="app">
-
-<header>
-
-<div class="eyebrow" id="date"></div>
-
+</style></head><body><div id="app"><header>
+<div class="small" id="date"></div>
 <h1>부산 바다, 오늘</h1>
-
-<div class="sub">
+<div class="subtitle">
 그날의 바다를 읽고, 오늘 가장 좋은 코스를 추천해요
 </div>
-
-</header>
-
-
-<!-- =====================
- HOME
-===================== -->
-
-<div class="panel active" id="home">
-
-<section>
-
-<div class="label">
-오늘의 인기 검색어
-</div>
-
-<div class="trends">
-
+</header><!-- 홈 --><div class="panel active" id="home"><section>
+<div class="label">오늘의 인기 검색어</div><div class="trends">
 <div class="trend">#다대포노을</div>
 <div class="trend">#광안리</div>
 <div class="trend">#흰여울문화마을</div>
 <div class="trend">#송정서핑</div>
-
 </div>
-
-</section>
-
-
-<section>
-
-<div class="label">
-오늘의 바다 브리핑
-</div>
-
-<div class="brief">
-
-<h2 id="beach-name">
-해운대
-</h2>
-
-<p id="beach-comment">
-파도가 잔잔하고 하늘이 맑아요. 산책과 사진 찍기 좋은 날입니다.
-</p>
-
-<div class="metrics">
-
+</section><section>
+<div class="label">오늘의 바다 브리핑</div><div class="brief">
+<h2 id="beachName">해운대</h2><p id="beachText">
+파도가 잔잔하고 하늘이 맑아요.
+산책과 사진 찍기 좋은 날입니다.
+</p><div class="metrics">
 <div class="metric">
 <strong id="wave">0.3m</strong>
 <span>파도 높이</span>
-</div>
-
-<div class="metric">
+</div><div class="metric">
 <strong id="temp">24°C</strong>
 <span>수온</span>
-</div>
-
-<div class="metric">
+</div><div class="metric">
 <strong id="tide">간조 14:20</strong>
 <span>물때</span>
 </div>
+</div>
+</div>
+</section><section>
+<div class="label">해변 선택</div><div class="beaches"><button class="beach active" data-beach="해운대">해운대</button>
+<button class="beach" data-beach="광안리">광안리</button>
+<button class="beach" data-beach="송정">송정</button>
+<button class="beach" data-beach="다대포">다대포</button>
 
 </div>
-
-</div>
-
-</section>
-
-
-<section>
-
-<div class="label">
-해변 선택
-</div>
-
-<div class="beaches">
-
-<button class="beach active" data-beach="해운대">
-해운대
-</button>
-
-<button class="beach" data-beach="광안리">
-광안리
-</button>
-
-<button class="beach" data-beach="송정">
-송정
-</button>
-
-<button class="beach" data-beach="다대포">
-다대포
-</button>
-
-</div>
-
-</section>
-
-</div>
-
-
-<!-- =====================
- MAP
-===================== -->
-
-<div class="panel" id="map-panel">
-
-<section>
-
-<div class="label">
-부산 바다 지도
-</div>
-
-<div class="map-filter">
-
-<button class="active" data-filter="all">
-전체
-</button>
-
-<button data-filter="spot">
-🔵 관광지
-</button>
-
-<button data-filter="food">
-🟠 음식점
-</button>
-
-<button data-filter="leisure">
-🟢 레저
-</button>
-
-</div>
-
-<div class="map-box">
-
-<div id="map"></div>
-
-<button class="location-button" id="location-btn">
+</section></div><!-- 지도 --><div class="panel" id="mapPanel"><section><div class="label">부산 전체 위치 지도</div><div class="map-filter">
+<button class="active" data-filter="all">전체</button>
+<button data-filter="spot">🔵 관광지</button>
+<button data-filter="food">🟠 음식점</button>
+<button data-filter="leisure">🟢 레저</button>
+</div><div class="map-wrap">
+<div id="map"></div><button class="current-btn" id="currentBtn">
 📍 현재 위치
 </button>
-
-</div>
-
-<div class="legend">
-
+</div><div class="legend">
 <span>🔵 관광지</span>
 <span>🟠 음식점</span>
 <span>🟢 레저</span>
-<span>🔴 현재 위치</span>
+<span>🔴 내 위치</span>
+</div></section>
+</div><!-- 명소 --><div class="panel" id="placesPanel"><section>
+<div class="label">부산 바다 명소</div>
+<div class="grid" id="placeGrid"></div>
+</section></div><!-- 코스 --><div class="panel" id="coursePanel"><section>
+<div class="label">누구와 가시나요?</div><div class="groups"><button class="group active" data-group="solo">
+<span>🚶</span>
+<b>혼자</b>
+</button><button class="group" data-group="couple">
+<span>💑</span>
+<b>커플</b>
+</button><button class="group" data-group="family">
+<span>👨‍👩‍👧</span>
+<b>가족</b>
+</button><button class="group" data-group="friends">
+<span>🎉</span>
+<b>친구</b>
+</button></div>
+</section><section>
+<div class="label">오늘의 추천 코스</div>
+<div class="course" id="courseList"></div>
+</section></div><!-- 마이코스 --><div class="panel" id="myPanel"><section><div class="label">나만의 코스 만들기</div><div class="type-buttons">
+<button class="active" id="spotButton">명소</button>
+<button id="foodButton">맛집</button>
+</div><div class="add-list" id="addList"></div><div class="label" style="margin-top:20px">
+내가 만든 코스 (<span id="count">0</span>곳)
+</div><div id="myList"></div></section></div><!-- 장소 상세 --><div class="modal-bg" id="modalBg"><div class="modal"><button class="close" id="closeModal">✕</button>
 
-</div>
-
-</section>
-
-</div>
-
-
-<!-- =====================
- PLACES
-===================== -->
-
-<div class="panel" id="places">
-
-<section>
-
-<div class="label">
-부산 바다 명소
-</div>
-
-<div class="card-grid" id="place-grid"></div>
-
-</section>
-
-</div>
-
-
-<!-- =====================
- COURSE
-===================== -->
-
-<div class="panel" id="course">
-
-<section>
-
-<div class="label">
-누구와 가시나요?
-</div>
-
-<div class="group-grid">
-
-<div class="group active" data-group="solo">
-<span class="group-icon">🚶</span>
-<span class="group-name">혼자</span>
-</div>
-
-<div class="group" data-group="couple">
-<span class="group-icon">💑</span>
-<span class="group-name">커플</span>
-</div>
-
-<div class="group" data-group="family">
-<span class="group-icon">👨‍👩‍👧</span>
-<span class="group-name">가족</span>
-</div>
-
-<div class="group" data-group="friends">
-<span class="group-icon">🎉</span>
-<span class="group-name">친구</span>
-</div>
-
-</div>
-
-</section>
-
-
-<section>
-
-<div class="label">
-오늘의 추천 코스
-</div>
-
-<div class="course" id="course-list"></div>
-
-</section>
-
-</div>
-
-
-<!-- =====================
- MY COURSE
-===================== -->
-
-<div class="panel" id="mycourse">
-
-<section>
-
-<div class="label">
-나만의 코스 만들기
-</div>
-
-<div class="type-buttons">
-
-<button class="active" id="spot-type">
-명소
-</button>
-
-<button id="food-type">
-맛집
-</button>
-
-</div>
-
-<div class="add-list" id="add-list"></div>
-
-<div class="label" style="margin-top:20px;">
-내가 만든 코스
-(<span id="my-count">0</span>곳)
-</div>
-
-<div class="my-list" id="my-list"></div>
-
-</section>
-
-</div>
-
-
-<!-- =====================
- MODAL
-===================== -->
-
-<div class="modal-bg" id="modal-bg">
-
-<div class="modal">
-
-<button class="modal-close" id="modal-close">
-✕
-</button>
-
-<div class="modal-type" id="modal-type"></div>
-
-<h2 id="modal-title"></h2>
-
-<p id="modal-description"></p>
-
-<button class="add-course" id="modal-add">
+<div class="modal-type" id="modalType"></div><h2 id="modalTitle"></h2><p id="modalDescription"></p><button class="modal-add" id="modalAdd">
 + 내 코스에 담기
-</button>
-
-</div>
-
-</div>
-
-
-<!-- =====================
- BOTTOM NAV
-===================== -->
-
-<nav id="bottom-nav">
-
-<button class="nav-btn active" data-target="home">
-<span class="nav-icon">🏠</span>
+</button></div>
+</div><!-- 하단 메뉴 --><nav id="nav"><button class="nav active" data-target="home">
+<span class="icon">🏠</span>
 홈
-</button>
-
-<button class="nav-btn" data-target="map-panel">
-<span class="nav-icon">🗺️</span>
+</button><button class="nav" data-target="mapPanel">
+<span class="icon">🗺️</span>
 지도
-</button>
-
-<button class="nav-btn" data-target="course">
-<span class="nav-icon">🧭</span>
+</button><button class="nav" data-target="coursePanel">
+<span class="icon">🧭</span>
 코스
-</button>
-
-<button class="nav-btn" data-target="mycourse">
-<span class="nav-icon">✏️</span>
+</button><button class="nav" data-target="myPanel">
+<span class="icon">✏️</span>
 마이코스
-</button>
+</button></nav></div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
 
-</nav>
+/* =========================
+날짜
+========================= */
 
-</div>
+const now = new Date();
 
-
-<!-- Leaflet -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-
-<script>
-
-/* ==================================================
-   부산 바다 오늘
-   모든 기능을 이 HTML 하나에서 처리
-================================================== */
-
-
-/* ==========================
-   현재 날짜
-========================== */
-
-const today = new Date();
-
-const days =
-[
-'일요일',
-'월요일',
-'화요일',
-'수요일',
-'목요일',
-'금요일',
-'토요일'
+const dayNames = [
+"일요일","월요일","화요일",
+"수요일","목요일","금요일","토요일"
 ];
 
-document.getElementById('date').textContent =
-(today.getMonth()+1)
-+'월 '
-+(today.getDate())
-+'일 · '
-+days[today.getDay()];
+document.getElementById("date").textContent =
+(now.getMonth()+1)+"월 "+
+now.getDate()+"일 · "+
+dayNames[now.getDay()];
 
 
-/* ==========================
-   장소 데이터
-========================== */
+/* =========================
+장소 데이터
+========================= */
 
 const places = [
 
-/* 관광지 */
-
 {
-id:'haeundae',
-type:'spot',
-name:'해운대 해수욕장',
-description:'부산을 대표하는 해수욕장으로 넓은 백사장과 바다 풍경을 즐길 수 있습니다.',
+id:"haeundae",
+type:"spot",
+name:"해운대 해수욕장",
+description:"부산을 대표하는 해수욕장으로 넓은 백사장과 바다 풍경을 즐길 수 있습니다.",
 lat:35.1587,
 lng:129.1604
 },
 
 {
-id:'gwangalli',
-type:'spot',
-name:'광안리 해수욕장',
-description:'광안대교와 바다 풍경을 함께 볼 수 있는 부산 대표 명소입니다.',
+id:"gwangalli",
+type:"spot",
+name:"광안리 해수욕장",
+description:"광안대교와 바다 풍경을 함께 볼 수 있는 부산 대표 명소입니다.",
 lat:35.1532,
 lng:129.1186
 },
 
 {
-id:'songjeong',
-type:'spot',
-name:'송정 해수욕장',
-description:'부산 동쪽 해안에 위치한 해변으로 산책과 서핑으로 유명합니다.',
+id:"songjeong",
+type:"spot",
+name:"송정 해수욕장",
+description:"부산 동쪽 해안에 위치한 해변으로 산책과 해양 레저를 즐길 수 있습니다.",
 lat:35.1789,
 lng:129.1991
 },
 
 {
-id:'dadaepo',
-type:'spot',
-name:'다대포 해수욕장',
-description:'넓은 해변과 아름다운 노을을 볼 수 있는 부산의 대표적인 노을 명소입니다.',
+id:"dadaepo",
+type:"spot",
+name:"다대포 해수욕장",
+description:"넓은 해변과 노을을 즐길 수 있는 부산의 대표적인 해안 명소입니다.",
 lat:35.0462,
 lng:128.9662
 },
 
 {
-id:'huinnyeoul',
-type:'spot',
-name:'흰여울문화마을',
-description:'영도의 바다와 골목길 풍경을 함께 즐길 수 있는 관광지입니다.',
+id:"huinnyeoul",
+type:"spot",
+name:"흰여울문화마을",
+description:"영도의 바다와 골목길 풍경을 함께 볼 수 있는 관광지입니다.",
 lat:35.0788,
 lng:129.0450
 },
 
 {
-id:'dongbaek',
-type:'spot',
-name:'동백섬',
-description:'해운대 주변의 해안 산책로와 자연 경관을 즐길 수 있습니다.',
+id:"dongbaek",
+type:"spot",
+name:"동백섬",
+description:"해운대 주변의 해안 산책로와 자연 경관을 즐길 수 있습니다.",
 lat:35.1532,
 lng:129.1526
 },
 
 {
-id:'songdo',
-type:'spot',
-name:'송도 구름산책로',
-description:'바다 위를 걸으며 부산의 해안 풍경을 감상할 수 있습니다.',
+id:"songdo",
+type:"spot",
+name:"송도 해수욕장",
+description:"부산 서쪽 해안의 대표적인 관광지입니다.",
 lat:35.0750,
 lng:129.0170
 },
 
 {
-id:'cheongsapo',
-type:'spot',
-name:'청사포',
-description:'부산 해안의 풍경과 다릿돌전망대를 함께 볼 수 있는 곳입니다.',
+id:"cheongsapo",
+type:"spot",
+name:"청사포",
+description:"해안 풍경과 다릿돌전망대를 볼 수 있는 곳입니다.",
 lat:35.1600,
 lng:129.2008
 },
 
-
-/* 음식점 */
-
 {
-id:'food1',
-type:'food',
-name:'해운대 밀면집',
-description:'부산의 대표적인 음식인 밀면을 맛볼 수 있는 음식점입니다.',
+id:"food1",
+type:"food",
+name:"해운대 밀면",
+description:"부산의 대표 음식인 밀면을 맛볼 수 있는 음식점 예시입니다.",
 lat:35.1612,
 lng:129.1635
 },
 
 {
-id:'food2',
-type:'food',
-name:'광안리 게장정식집',
-description:'광안리 주변에서 식사를 즐길 수 있는 음식점입니다.',
+id:"food2",
+type:"food",
+name:"광안리 식당",
+description:"광안리 주변에서 식사를 즐길 수 있는 음식점 예시입니다.",
 lat:35.1535,
 lng:129.1180
 },
 
 {
-id:'food3',
-type:'food',
-name:'다대포 해물집',
-description:'다대포 주변에서 해산물 요리를 즐길 수 있는 음식점입니다.',
+id:"food3",
+type:"food",
+name:"다대포 해산물 식당",
+description:"다대포 주변에서 해산물 요리를 즐길 수 있는 음식점 예시입니다.",
 lat:35.0465,
 lng:128.9668
 },
 
 {
-id:'food4',
-type:'food',
-name:'송정 브런치 카페',
-description:'송정 바다를 바라보며 식사와 음료를 즐길 수 있는 카페입니다.',
+id:"food4",
+type:"food",
+name:"송정 바다 카페",
+description:"송정 바다를 바라보며 쉬어갈 수 있는 카페 예시입니다.",
 lat:35.1793,
 lng:129.1985
 },
 
 {
-id:'food5',
-type:'food',
-name:'흰여울 바다 카페',
-description:'영도의 바다 풍경을 바라보며 쉬어갈 수 있는 카페입니다.',
+id:"food5",
+type:"food",
+name:"흰여울 카페",
+description:"영도의 바다 풍경을 바라보며 쉬어갈 수 있는 카페 예시입니다.",
 lat:35.0785,
 lng:129.0445
 },
 
-
-/* 레저 */
-
 {
-id:'leisure1',
-type:'leisure',
-name:'송정 서핑',
-description:'송정 해변에서 즐길 수 있는 대표적인 해양 레저 활동입니다.',
+id:"leisure1",
+type:"leisure",
+name:"송정 서핑",
+description:"송정 해변에서 즐길 수 있는 대표적인 해양 레저 활동입니다.",
 lat:35.1789,
 lng:129.1991
 },
 
 {
-id:'leisure2',
-type:'leisure',
-name:'송도 해상 케이블카',
-description:'바다 위에서 부산의 해안 경관을 감상할 수 있는 관광 시설입니다.',
+id:"leisure2",
+type:"leisure",
+name:"송도 해상 케이블카",
+description:"바다 위에서 부산의 해안 경관을 감상할 수 있는 관광 시설입니다.",
 lat:35.0762,
 lng:129.0177
 },
 
 {
-id:'leisure3',
-type:'leisure',
-name:'다대포 갯벌 체험',
-description:'다대포의 해안 환경을 직접 관찰할 수 있는 체험 활동입니다.',
+id:"leisure3",
+type:"leisure",
+name:"다대포 해안 체험",
+description:"다대포의 해안 환경을 관찰할 수 있는 체험 활동 예시입니다.",
 lat:35.0462,
 lng:128.9662
 }
@@ -1084,150 +734,159 @@ lng:128.9662
 ];
 
 
-/* ==========================
-   지도
-========================== */
+/* =========================
+하단 메뉴
+========================= */
 
-let map = null;
+document.querySelectorAll(".nav").forEach(function(btn){
 
-let markers = [];
+btn.addEventListener("click",function(){
 
-let myLocationMarker = null;
+document.querySelectorAll(".panel").forEach(function(panel){
+panel.classList.remove("active");
+});
 
+document.getElementById(
+this.dataset.target
+).classList.add("active");
 
-/* ==========================
-   지도 아이콘
-========================== */
+document.querySelectorAll(".nav").forEach(function(n){
+n.classList.remove("active");
+});
 
-function makeIcon(type){
+this.classList.add("active");
 
-let color;
-let emoji;
+window.scrollTo(0,0);
 
-if(type === 'spot'){
-
-color='#2878d7';
-emoji='📍';
-
+if(this.dataset.target === "mapPanel"){
+setTimeout(function(){
+initMap();
+map.invalidateSize();
+},100);
 }
-
-else if(type === 'food'){
-
-color='#ef7350';
-emoji='🍴';
-
-}
-
-else{
-
-color='#3ba76b';
-emoji='🏄';
-
-}
-
-
-return L.divIcon({
-
-className:'custom-map-icon',
-
-html:
-
-'<div style="'
-+
-'width:32px;'
-+
-'height:32px;'
-+
-'background:'+color+';'
-+
-'border:3px solid white;'
-+
-'border-radius:50% 50% 50% 0;'
-+
-'transform:rotate(-45deg);'
-+
-'box-shadow:0 2px 7px rgba(0,0,0,.3);'
-+
-'">'
-+
-'<div style="'
-+
-'transform:rotate(45deg);'
-+
-'text-align:center;'
-+
-'line-height:26px;'
-+
-'font-size:13px;'
-+
-'">'
-+
-emoji
-+
-'</div>'
-+
-'</div>',
-
-iconSize:[32,32],
-
-iconAnchor:[16,32]
 
 });
 
+});
+
+
+/* =========================
+해변 버튼
+========================= */
+
+const beachData = {
+
+"해운대":{
+wave:"0.3m",
+temp:"24°C",
+tide:"간조 14:20",
+text:"파도가 잔잔하고 하늘이 맑아요. 산책과 사진 찍기 좋은 날입니다."
+},
+
+"광안리":{
+wave:"0.5m",
+temp:"23°C",
+tide:"만조 11:40",
+text:"광안대교와 바다 풍경을 함께 즐기기 좋은 곳입니다."
+},
+
+"송정":{
+wave:"0.8m",
+temp:"22°C",
+tide:"간조 15:10",
+text:"파도가 조금 있어 해양 레저를 즐기기 좋은 장소입니다."
+},
+
+"다대포":{
+wave:"0.2m",
+temp:"24°C",
+tide:"간조 13:50",
+text:"넓은 해변과 노을을 즐기기 좋은 곳입니다."
 }
 
+};
 
-/* ==========================
-   지도 만들기
-========================== */
+document.querySelectorAll(".beach").forEach(function(btn){
+
+btn.addEventListener("click",function(){
+
+document.querySelectorAll(".beach").forEach(function(b){
+b.classList.remove("active");
+});
+
+this.classList.add("active");
+
+const data = beachData[this.dataset.beach];
+
+document.getElementById("beachName").textContent =
+this.dataset.beach;
+
+document.getElementById("beachText").textContent =
+data.text;
+
+document.getElementById("wave").textContent =
+data.wave;
+
+document.getElementById("temp").textContent =
+data.temp;
+
+document.getElementById("tide").textContent =
+data.tide;
+
+});
+
+});
+
+
+/* =========================
+지도
+========================= */
+
+let map = null;
+let markers = [];
+let currentMarker = null;
 
 function initMap(){
 
 if(map !== null){
-
-setTimeout(function(){
-
-map.invalidateSize();
-
-},200);
-
 return;
-
 }
 
-
-map =
-L.map('map')
-.setView(
+map = L.map("map").setView(
 [35.1532,129.1186],
 11
 );
 
-
 L.tileLayer(
-
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 {
-
-attribution:
-'© OpenStreetMap contributors',
-
-maxZoom:19
-
+attribution:"© OpenStreetMap contributors"
 }
-
 ).addTo(map);
 
-
-showMarkers('all');
+showMarkers("all");
 
 }
 
 
-/* ==========================
-   핀 표시
-========================== */
+/* 핀 색깔 */
+
+function getColor(type){
+
+if(type === "food"){
+return "#ef7653";
+}
+
+if(type === "leisure"){
+return "#3da66a";
+}
+
+return "#2878d7";
+
+}
+
+
+/* 지도 핀 */
 
 function showMarkers(filter){
 
@@ -1235,100 +894,51 @@ if(!map){
 return;
 }
 
-
-/* 기존 핀 제거 */
-
 markers.forEach(function(marker){
-
 map.removeLayer(marker);
-
 });
 
-markers=[];
-
-
-/* 새 핀 생성 */
+markers = [];
 
 places.forEach(function(place){
 
 if(
-filter !== 'all'
-&&
+filter !== "all" &&
 place.type !== filter
 ){
-
 return;
-
 }
 
-
-let typeName='관광지';
-
-if(place.type==='food'){
-
-typeName='음식점';
-
-}
-
-if(place.type==='leisure'){
-
-typeName='레저';
-
-}
-
-
-const marker =
-L.marker(
-
-[
-place.lat,
-place.lng
-],
-
+const marker = L.circleMarker(
+[place.lat,place.lng],
 {
-icon:makeIcon(place.type)
+radius:9,
+color:"#ffffff",
+weight:3,
+fillColor:getColor(place.type),
+fillOpacity:1
+}
+).addTo(map);
+
+let typeName = "관광지";
+
+if(place.type === "food"){
+typeName = "음식점";
 }
 
-)
-.addTo(map);
-
+if(place.type === "leisure"){
+typeName = "레저";
+}
 
 marker.bindPopup(
-
-'<div style="min-width:150px;">'
-+
-'<strong>'
-+
-place.name
-+
-'</strong>'
-+
-'<br>'
-+
-'<span style="font-size:11px;color:#687875;">'
-+
-typeName
-+
-'</span>'
-+
-'<br><br>'
-+
-'<button '
-+
-'onclick="openPlace(\''+
+"<b>"+place.name+"</b><br>"+
+"<small>"+typeName+"</small><br><br>"+
+"<button onclick=\"openPlace('"+
 place.id+
-'\')" '
-+
-'style="border:0;background:#1b6e6a;color:white;padding:7px 10px;border-radius:8px;">'
-+
-'자세히 보기'
-+
-'</button>'
-+
-'</div>'
-
+"')\" style=\"background:#176c67;color:white;border:0;padding:7px 10px;border-radius:7px\">"+
+"자세히 보기"+
+"</button>"
 );
-
 
 markers.push(marker);
 
@@ -1337,319 +947,132 @@ markers.push(marker);
 }
 
 
-/* ==========================
-   현재 위치
-========================== */
+/* 지도 필터 */
 
-document
-.getElementById('location-btn')
-.addEventListener(
-'click',
-function(){
+document.querySelectorAll(".map-filter button")
+.forEach(function(btn){
+
+btn.addEventListener("click",function(){
+
+document.querySelectorAll(".map-filter button")
+.forEach(function(b){
+b.classList.remove("active");
+});
+
+this.classList.add("active");
+
+showMarkers(this.dataset.filter);
+
+});
+
+});
+
+
+/* =========================
+현재 위치
+========================= */
+
+document.getElementById("currentBtn")
+.addEventListener("click",function(){
 
 if(!navigator.geolocation){
 
-alert(
-'이 브라우저에서는 위치 기능을 사용할 수 없습니다.'
-);
-
+alert("이 브라우저에서는 위치 기능을 사용할 수 없습니다.");
 return;
 
 }
 
+const button = this;
 
-this.textContent =
-'📍 위치 찾는 중...';
-
+button.textContent = "📍 위치 찾는 중...";
 
 navigator.geolocation.getCurrentPosition(
 
 function(position){
 
-const lat =
-position.coords.latitude;
+const lat = position.coords.latitude;
+const lng = position.coords.longitude;
 
-const lng =
-position.coords.longitude;
-
-
-/* 기존 위치 핀 제거 */
-
-if(myLocationMarker){
-
-map.removeLayer(
-myLocationMarker
-);
-
+if(currentMarker){
+map.removeLayer(currentMarker);
 }
 
-
-/* 빨간색 현재 위치 */
-
-myLocationMarker =
+currentMarker =
 L.circleMarker(
-
-[
-lat,
-lng
-],
-
+[lat,lng],
 {
-
-radius:9,
-
-color:'#ffffff',
-
+radius:10,
+color:"#fff",
 weight:3,
-
-fillColor:'#e53935',
-
+fillColor:"#e53935",
 fillOpacity:1
-
 }
-
 ).addTo(map);
 
-
-myLocationMarker.bindPopup(
-'<strong>🔴 현재 위치</strong>'
-);
-
+currentMarker.bindPopup(
+"<b>🔴 현재 위치</b>"
+).openPopup();
 
 map.setView(
 [lat,lng],
 15
 );
 
-
-document
-.getElementById('location-btn')
-.textContent =
-'📍 현재 위치';
+button.textContent = "📍 현재 위치";
 
 },
 
-function(error){
+function(){
 
-document
-.getElementById('location-btn')
-.textContent =
-'📍 현재 위치';
-
-
-if(error.code === 1){
+button.textContent = "📍 현재 위치";
 
 alert(
-'위치 권한을 허용해야 현재 위치를 확인할 수 있어요.'
+"현재 위치를 사용하려면 브라우저에서 위치 권한을 허용해주세요."
 );
-
-}
-
-else{
-
-alert(
-'현재 위치를 찾지 못했습니다.'
-);
-
-}
 
 },
 
 {
-
 enableHighAccuracy:true,
-
 timeout:10000,
-
 maximumAge:0
-
 }
 
 );
 
-}
-);
-
-
-/* ==========================
-   지도 필터
-========================== */
-
-document
-.querySelectorAll('.map-filter button')
-.forEach(function(button){
-
-button.addEventListener(
-'click',
-function(){
-
-document
-.querySelectorAll('.map-filter button')
-.forEach(function(btn){
-
-btn.classList.remove('active');
-
 });
 
 
-this.classList.add('active');
-
-
-showMarkers(
-this.dataset.filter
-);
-
-});
-
-});
-
-
-/* ==========================
-   홈 해변
-========================== */
-
-const beachData = {
-
-'해운대':{
-
-wave:'0.3m',
-temp:'24°C',
-tide:'간조 14:20',
-comment:'파도가 잔잔하고 하늘이 맑아요. 산책과 사진 찍기 좋은 날입니다.'
-
-},
-
-'광안리':{
-
-wave:'0.5m',
-temp:'23°C',
-tide:'만조 11:40',
-comment:'광안대교와 바다 풍경을 함께 즐기기 좋은 날이에요.'
-
-},
-
-'송정':{
-
-wave:'0.8m',
-temp:'22°C',
-tide:'간조 15:10',
-comment:'파도가 조금 있어 해양 레저를 즐기기 좋은 장소예요.'
-
-},
-
-'다대포':{
-
-wave:'0.2m',
-temp:'24°C',
-tide:'간조 13:50',
-comment:'넓은 해변과 노을을 즐기기 좋은 날이에요.'
-
-}
-
-};
-
-
-document
-.querySelectorAll('.beach')
-.forEach(function(button){
-
-button.addEventListener(
-'click',
-function(){
-
-document
-.querySelectorAll('.beach')
-.forEach(function(btn){
-
-btn.classList.remove('active');
-
-});
-
-this.classList.add('active');
-
-
-const data =
-beachData[
-this.dataset.beach
-];
-
-
-document.getElementById('beach-name')
-.textContent =
-this.dataset.beach;
-
-document.getElementById('beach-comment')
-.textContent =
-data.comment;
-
-document.getElementById('wave')
-.textContent =
-data.wave;
-
-document.getElementById('temp')
-.textContent =
-data.temp;
-
-document.getElementById('tide')
-.textContent =
-data.tide;
-
-});
-
-});
-
-
-/* ==========================
-   명소 카드
-========================== */
+/* =========================
+명소 카드
+========================= */
 
 function renderPlaces(){
 
 const grid =
-document.getElementById('place-grid');
+document.getElementById("placeGrid");
 
-grid.innerHTML='';
-
+grid.innerHTML = "";
 
 places
-.filter(function(place){
-
-return place.type === 'spot';
-
+.filter(function(p){
+return p.type === "spot";
 })
 .forEach(function(place){
 
 const card =
-document.createElement('div');
+document.createElement("div");
 
-card.className='place-card';
-
+card.className = "card";
 
 card.innerHTML =
+'<div class="emoji">📍</div>'+
+'<h3>'+place.name+'</h3>'+
+'<p>'+place.description+'</p>';
 
-'<div class="place-icon">📍</div>'
-+
-'<h3>'
-+
-place.name
-+
-'</h3>'
-+
-'<p>'
-+
-place.description.substring(0,35)
-+
-'...</p>';
-
-
-card.addEventListener(
-'click',
-function(){
-
+card.addEventListener("click",function(){
 openPlace(place.id);
-
 });
-
 
 grid.appendChild(card);
 
@@ -1660,113 +1083,82 @@ grid.appendChild(card);
 renderPlaces();
 
 
-/* ==========================
-   장소 모달
-========================== */
+/* =========================
+장소 모달
+========================= */
 
 let selectedPlace = null;
 
 function openPlace(id){
 
 const place =
-places.find(function(item){
-
-return item.id === id;
-
+places.find(function(p){
+return p.id === id;
 });
-
 
 if(!place){
-
 return;
-
 }
 
+selectedPlace = place;
 
-selectedPlace=place;
+let typeName = "관광지";
 
-
-let typeName='관광지';
-
-if(place.type==='food'){
-
-typeName='음식점';
-
+if(place.type === "food"){
+typeName = "음식점";
 }
 
-if(place.type==='leisure'){
-
-typeName='레저';
-
+if(place.type === "leisure"){
+typeName = "레저";
 }
 
-
-document.getElementById('modal-type')
-.textContent =
+document.getElementById("modalType").textContent =
 typeName;
 
-document.getElementById('modal-title')
-.textContent =
+document.getElementById("modalTitle").textContent =
 place.name;
 
-document.getElementById('modal-description')
-.textContent =
+document.getElementById("modalDescription").textContent =
 place.description;
 
-
-document
-.getElementById('modal-bg')
-.classList.add('open');
+document.getElementById("modalBg").classList.add("open");
 
 }
 
 
-/* ==========================
-   모달 닫기
-========================== */
+document.getElementById("closeModal")
+.addEventListener("click",function(){
 
-document
-.getElementById('modal-close')
-.addEventListener(
-'click',
-function(){
-
-document
-.getElementById('modal-bg')
-.classList.remove('open');
+document.getElementById("modalBg")
+.classList.remove("open");
 
 });
 
 
-document
-.getElementById('modal-bg')
-.addEventListener(
-'click',
-function(event){
+document.getElementById("modalBg")
+.addEventListener("click",function(e){
 
-if(event.target === this){
-
-this.classList.remove('open');
-
+if(e.target === this){
+this.classList.remove("open");
 }
 
 });
 
 
-/* ==========================
-   마이코스
-========================== */
+/* =========================
+마이코스
+========================= */
 
 let myCourse =
 JSON.parse(
-localStorage.getItem('busanMyCourse') || '[]'
+localStorage.getItem("busanMyCourse") || "[]"
 );
 
 
-function saveMyCourse(){
+function saveCourse(){
 
 localStorage.setItem(
-'busanMyCourse',
+"busanMyCourse",
 JSON.stringify(myCourse)
 );
 
@@ -1776,95 +1168,58 @@ JSON.stringify(myCourse)
 function renderMyCourse(){
 
 const list =
-document.getElementById('my-list');
+document.getElementById("myList");
 
-const count =
-document.getElementById('my-count');
-
-
-count.textContent =
+document.getElementById("count").textContent =
 myCourse.length;
 
+list.innerHTML = "";
 
-list.innerHTML='';
-
-
-if(myCourse.length===0){
+if(myCourse.length === 0){
 
 list.innerHTML =
-'<div class="empty">'
-+
-'아직 추가한 장소가 없어요.'
-+
-'</div>';
+'<div style="text-align:center;padding:20px;color:#8c9a97;font-size:11px">'+
+"아직 추가한 장소가 없어요."+
+"</div>";
 
 return;
 
 }
-
 
 myCourse.forEach(function(id,index){
 
 const place =
-places.find(function(item){
-
-return item.id===id;
-
+places.find(function(p){
+return p.id === id;
 });
-
 
 if(!place){
-
 return;
-
 }
 
-
 const item =
-document.createElement('div');
+document.createElement("div");
 
-item.className='my-item';
-
+item.className = "my-item";
 
 item.innerHTML =
-
-'<div class="my-num">'
-+
-(index+1)
-+
-'</div>'
-+
-'<div class="my-name">'
-+
-place.name
-+
-'</div>'
-+
+'<div class="num">'+(index+1)+'</div>'+
+'<div class="my-name">'+place.name+'</div>'+
 '<button class="remove">✕</button>';
 
-
-item
-.querySelector('.remove')
-.addEventListener(
-'click',
-function(){
+item.querySelector(".remove")
+.addEventListener("click",function(){
 
 myCourse =
-myCourse.filter(function(itemId){
-
-return itemId !== id;
-
+myCourse.filter(function(x){
+return x !== id;
 });
 
-
-saveMyCourse();
-
+saveCourse();
 renderMyCourse();
-
 renderAddList();
 
 });
-
 
 list.appendChild(item);
 
@@ -1876,137 +1231,100 @@ list.appendChild(item);
 function renderAddList(){
 
 const list =
-document.getElementById('add-list');
+document.getElementById("addList");
 
-list.innerHTML='';
+list.innerHTML = "";
 
-
-const currentType =
-document
-.querySelector('#spot-type')
-.classList
-.contains('active')
-?'spot'
-:'food';
-
+const type =
+document.getElementById("spotButton")
+.classList.contains("active")
+? "spot"
+: "food";
 
 places
-.filter(function(place){
-
-return place.type===currentType;
-
+.filter(function(p){
+return p.type === type;
 })
 .forEach(function(place){
 
-const button =
-document.createElement('button');
+const btn =
+document.createElement("button");
 
-button.className='add-place';
+btn.className = "add-place";
 
 const already =
 myCourse.includes(place.id);
 
-
-button.textContent =
+btn.textContent =
 already
-?'✓ '+place.name
-:'+ '+place.name;
+? "✓ "+place.name
+: "+ "+place.name;
 
-
-button.addEventListener(
-'click',
-function(){
+btn.addEventListener("click",function(){
 
 if(!myCourse.includes(place.id)){
 
 myCourse.push(place.id);
 
-saveMyCourse();
-
+saveCourse();
 renderMyCourse();
-
 renderAddList();
 
 }
 
 });
 
-
-list.appendChild(button);
+list.appendChild(btn);
 
 });
 
 }
 
 
-document
-.getElementById('spot-type')
-.addEventListener(
-'click',
-function(){
+document.getElementById("spotButton")
+.addEventListener("click",function(){
 
-this.classList.add('active');
-
-document
-.getElementById('food-type')
-.classList.remove('active');
+this.classList.add("active");
+document.getElementById("foodButton")
+.classList.remove("active");
 
 renderAddList();
 
 });
 
 
-document
-.getElementById('food-type')
-.addEventListener(
-'click',
-function(){
+document.getElementById("foodButton")
+.addEventListener("click",function(){
 
-this.classList.add('active');
-
-document
-.getElementById('spot-type')
-.classList.remove('active');
+this.classList.add("active");
+document.getElementById("spotButton")
+.classList.remove("active");
 
 renderAddList();
 
 });
 
 
-/* 모달에서 코스 추가 */
-
-document
-.getElementById('modal-add')
-.addEventListener(
-'click',
-function(){
+document.getElementById("modalAdd")
+.addEventListener("click",function(){
 
 if(!selectedPlace){
-
 return;
-
 }
-
 
 if(!myCourse.includes(selectedPlace.id)){
 
 myCourse.push(selectedPlace.id);
 
-saveMyCourse();
-
+saveCourse();
 renderMyCourse();
-
 renderAddList();
 
-this.textContent =
-'✓ 내 코스에 추가됨';
+this.textContent = "✓ 내 코스에 추가됨";
 
-}
+}else{
 
-else{
-
-this.textContent =
-'이미 내 코스에 있어요';
+this.textContent = "이미 추가된 장소입니다";
 
 }
 
@@ -2014,46 +1332,37 @@ this.textContent =
 
 
 renderMyCourse();
-
 renderAddList();
 
 
-/* ==========================
-   추천 코스
-========================== */
+/* =========================
+추천 코스
+========================= */
 
 const courses = {
 
 solo:[
-
-['오전','흰여울문화마을','spot'],
-['점심','흰여울 바다 카페','food'],
-['오후','청사포','spot']
-
+"흰여울문화마을",
+"흰여울 카페",
+"청사포"
 ],
 
 couple:[
-
-['오전','다대포 해수욕장','spot'],
-['점심','광안리 게장정식집','food'],
-['저녁','광안리 해수욕장','spot']
-
+"다대포 해수욕장",
+"광안리 식당",
+"광안리 해수욕장"
 ],
 
 family:[
-
-['오전','해운대 해수욕장','spot'],
-['점심','해운대 밀면집','food'],
-['오후','동백섬','spot']
-
+"해운대 해수욕장",
+"해운대 밀면",
+"동백섬"
 ],
 
 friends:[
-
-['오전','송정 해수욕장','spot'],
-['점심','송정 브런치 카페','food'],
-['오후','송정 서핑','leisure']
-
+"송정 해수욕장",
+"송정 바다 카페",
+"송정 서핑"
 ]
 
 };
@@ -2062,195 +1371,65 @@ friends:[
 function renderCourse(group){
 
 const box =
-document.getElementById('course-list');
+document.getElementById("courseList");
 
-box.innerHTML='';
+box.innerHTML = "";
 
-
-courses[group].forEach(function(item){
-
-const row =
-document.createElement('div');
-
-row.className='course-item';
-
-
-row.innerHTML =
-
-'<div class="course-icon '
-+
-(item[2]==='food'
-?'course-food'
-:'')
-+
-'">'
-+
-(item[2]==='food'
-?'🍴'
-:item[2]==='leisure'
-?'🏄'
-:'📍')
-+
-'</div>'
-+
-'<div>'
-+
-'<div class="course-time">'
-+
-item[0]
-+
-'</div>'
-+
-'<div class="course-title">'
-+
-item[1]
-+
-'</div>'
-+
-'<div class="course-desc">'
-+
-'추천 코스 장소'
-+
-'</div>'
-+
-'</div>';
-
-
-row.addEventListener(
-'click',
-function(){
+courses[group].forEach(function(name,index){
 
 const place =
 places.find(function(p){
-
-return p.name===item[1];
-
+return p.name === name;
 });
+
+const item =
+document.createElement("div");
+
+item.className = "course-item";
+
+item.innerHTML =
+'<div class="course-number">'+
+(index+1)+
+'</div>'+
+'<div>'+
+'<h3>'+name+'</h3>'+
+'<p>추천 코스 장소 · 눌러서 자세히 보기</p>'+
+'</div>';
 
 if(place){
 
+item.addEventListener("click",function(){
 openPlace(place.id);
-
-}
-
-});
-
-
-box.appendChild(row);
-
 });
 
 }
 
+box.appendChild(item);
 
-renderCourse('solo');
+});
+
+}
+
+renderCourse("solo");
 
 
-/* 추천 코스 버튼 */
-
-document
-.querySelectorAll('.group')
-.forEach(function(button){
-
-button.addEventListener(
-'click',
-function(){
-
-document
-.querySelectorAll('.group')
+document.querySelectorAll(".group")
 .forEach(function(btn){
 
-btn.classList.remove('active');
+btn.addEventListener("click",function(){
 
+document.querySelectorAll(".group")
+.forEach(function(b){
+b.classList.remove("active");
 });
 
-this.classList.add('active');
+this.classList.add("active");
 
-renderCourse(
-this.dataset.group
-);
-
-});
-
-});
-
-
-/* ==========================
-   하단 메뉴
-========================== */
-
-document
-.querySelectorAll('.nav-btn')
-.forEach(function(button){
-
-button.addEventListener(
-'click',
-function(){
-
-const target =
-this.dataset.target;
-
-
-/* 모든 패널 숨기기 */
-
-document
-.querySelectorAll('.panel')
-.forEach(function(panel){
-
-panel.classList.remove('active');
-
-});
-
-
-/* 선택한 패널 표시 */
-
-document
-.getElementById(target)
-.classList.add('active');
-
-
-/* 메뉴 색깔 */
-
-document
-.querySelectorAll('.nav-btn')
-.forEach(function(btn){
-
-btn.classList.remove('active');
-
-});
-
-this.classList.add('active');
-
-
-window.scrollTo(0,0);
-
-
-/* 지도 탭을 열었을 때 지도 생성 */
-
-if(target==='map-panel'){
-
-setTimeout(
-function(){
-
-initMap();
-
-if(map){
-
-map.invalidateSize();
-
-}
-
-},
-100
-);
-
-}
+renderCourse(this.dataset.group);
 
 });
 
 });
 
-</script>
-
-</body>
+</script></body>
 </html>
