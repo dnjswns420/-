@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <!-- 지도 기능 -->
+    <!-- 지도 -->
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -106,7 +106,6 @@
 
     <div class="card-container">
 
-
         <div class="place-card">
 
             <div class="place-image">
@@ -156,7 +155,6 @@
 
         </div>
 
-
     </div>
 
 
@@ -203,9 +201,33 @@
         부산의 해양 생태 관광지를 지도에서 확인해보세요.
     </p>
 
+
+    <!-- 현재 위치 버튼 -->
+
+    <button
+        class="location-button"
+        onclick="findMyLocation()">
+
+        📍 내 현재 위치 찾기
+
+    </button>
+
+
     <div
         id="mapArea"
         class="map-area">
+    </div>
+
+
+    <!-- 현재 위치 정보 -->
+
+    <div
+        id="locationInfo"
+        class="location-info">
+
+        현재 위치를 확인하려면
+        위 버튼을 눌러주세요.
+
     </div>
 
 </section>
@@ -228,8 +250,6 @@
     </p>
 
 
-    <!-- 생태 코스 -->
-
     <div class="course-card">
 
         <h2>
@@ -247,8 +267,6 @@
     </div>
 
 
-    <!-- 해안 코스 -->
-
     <div class="course-card">
 
         <h2>
@@ -265,8 +283,6 @@
 
     </div>
 
-
-    <!-- 코스 지도 -->
 
     <div
         id="courseMap"
@@ -325,10 +341,6 @@
 
 
 
-<!-- ==========================
-     하단 메뉴
-========================== -->
-
 <footer class="bottom-nav">
 
     <button onclick="showPage('home')">
@@ -362,9 +374,8 @@
 </script>
 
 
-<!-- 우리 앱의 JavaScript -->
-
 <script src="script.js"></script>
 
 </body>
+
 </html>
