@@ -1,269 +1,160 @@
-/* ==========================
-   기본 설정
-========================== */
-
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 body {
+    margin: 0;
     font-family: Arial, sans-serif;
-    background: #f4f8f9;
-    color: #173b4d;
-    padding-bottom: 80px;
+    background: #f4fbfc;
+    color: #173642;
 }
 
 button {
-    border: none;
     cursor: pointer;
+    border: none;
     font-family: inherit;
 }
 
-
-/* ==========================
-   상단 헤더
-========================== */
-
 .header {
-    height: 65px;
+    height: 70px;
     background: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
     border-bottom: 1px solid #e5eeee;
-    position: sticky;
-    top: 0;
-    z-index: 100;
 }
 
 .logo {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
 }
 
 .menu-button {
     background: none;
-    font-size: 25px;
-    color: #173b4d;
+    font-size: 30px;
+    color: #173642;
 }
-
-
-/* ==========================
-   메뉴
-========================== */
 
 .menu {
     display: none;
+    position: absolute;
+    right: 15px;
+    top: 65px;
     background: white;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    z-index: 1000;
 }
 
 .menu.show {
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
 .menu button {
-    display: block;
-    width: 100%;
+    background: white;
+    padding: 13px 20px;
     text-align: left;
-    background: none;
-    padding: 14px 5px;
     font-size: 16px;
 }
 
-
-/* ==========================
-   메인
-========================== */
-
 main {
-    max-width: 700px;
-    margin: auto;
-    padding: 20px;
+    padding-bottom: 90px;
 }
 
 .page {
     display: none;
+    padding: 25px 20px;
 }
 
 .page.active {
     display: block;
 }
 
-
-/* ==========================
-   홈 히어로
-========================== */
-
 .hero {
-    background: linear-gradient(
-        135deg,
-        #b9edf5,
-        #dff7fa
-    );
-
-    border-radius: 25px;
-    padding: 30px 25px;
-    margin-bottom: 20px;
+    padding: 30px 0;
 }
 
 .small-title {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
+    color: #1687a7;
 }
 
 .hero h1 {
-    font-size: 34px;
+    font-size: 38px;
     line-height: 1.25;
-    margin-bottom: 15px;
+    margin: 10px 0;
 }
-
-.hero p {
-    line-height: 1.6;
-}
-
-
-/* ==========================
-   검색창
-========================== */
 
 .search-box {
     display: flex;
-    background: white;
-    border-radius: 15px;
-    padding: 6px;
-    margin-bottom: 30px;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+    margin: 15px 0 30px;
 }
 
 .search-box input {
     flex: 1;
-    border: none;
-    outline: none;
-    padding: 12px;
+    padding: 15px;
+    border: 1px solid #ccdfe3;
+    border-radius: 10px 0 0 10px;
     font-size: 15px;
 }
 
 .search-box button {
-    width: 45px;
-    border-radius: 12px;
-    background: #3aa7c4;
+    width: 55px;
+    background: #1687a7;
     color: white;
-    font-size: 18px;
+    border-radius: 0 10px 10px 0;
 }
-
-
-/* ==========================
-   제목
-========================== */
-
-h2 {
-    margin-bottom: 15px;
-}
-
-.page h1 {
-    margin-bottom: 10px;
-}
-
-.page > p {
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-
-/* ==========================
-   관광지 카드
-========================== */
 
 .card-container {
     display: flex;
-    flex-direction: column;
     gap: 15px;
-    margin-bottom: 25px;
+    overflow-x: auto;
 }
 
 .place-card {
+    min-width: 240px;
     background: white;
-    border-radius: 18px;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
 }
 
 .place-image {
     height: 120px;
-    background: #c8edf2;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 55px;
+    background: #dff4f8;
 }
 
 .place-info {
-    padding: 18px;
-}
-
-.place-info h3 {
-    margin-bottom: 8px;
-    font-size: 19px;
-}
-
-.place-info p {
-    color: #5c7179;
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 14px;
+    padding: 15px;
 }
 
 .place-info button,
 .course-card button,
-#mycourse button {
-    background: #318fa9;
-    color: white;
+.ai-box button {
     padding: 10px 15px;
-    border-radius: 10px;
+    border-radius: 8px;
+    background: #1687a7;
+    color: white;
 }
-
-
-/* ==========================
-   AI 추천
-========================== */
 
 .ai-box {
-    background: #173b4d;
-    color: white;
-    border-radius: 20px;
+    margin-top: 25px;
     padding: 20px;
-    margin-top: 20px;
-}
-
-.ai-icon {
-    font-size: 35px;
-    margin-bottom: 10px;
-}
-
-.ai-box h2 {
-    margin-bottom: 8px;
-}
-
-.ai-box p {
-    line-height: 1.6;
-    font-size: 14px;
-    opacity: 0.9;
-    margin-bottom: 15px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
 }
 
 .ai-box button {
-    background: white;
-    color: #173b4d;
-    padding: 11px 16px;
-    border-radius: 10px;
-    font-weight: bold;
+    margin-top: 10px;
 }
 
 
@@ -272,19 +163,64 @@ h2 {
 ========================== */
 
 .map-area {
-    height: 400px;
-    background: #d9e9e5;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #55716f;
-    font-size: 18px;
+    width: 100%;
+    height: 500px;
+    margin-top: 15px;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #ddd;
 }
 
-.map-message {
-    line-height: 2;
+.course-map {
+    margin-top: 20px;
+}
+
+
+/* ==========================
+   현재 위치 버튼
+========================== */
+
+.location-button {
+    display: block;
+
+    width: 100%;
+
+    padding: 15px;
+
+    margin: 15px 0;
+
+    background: #1687a7;
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    border-radius: 10px;
+
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.location-button:active {
+    transform: scale(0.98);
+}
+
+
+/* 현재 위치 정보 */
+
+.location-info {
+    margin-top: 10px;
+
+    padding: 15px;
+
+    background: white;
+
+    border-radius: 10px;
+
+    line-height: 1.6;
+
+    font-size: 14px;
 }
 
 
@@ -294,83 +230,80 @@ h2 {
 
 .course-card {
     background: white;
-    padding: 22px;
-    border-radius: 18px;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+
+    margin: 15px 0;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
 }
 
-.course-card h2 {
-    font-size: 20px;
-}
-
-.course-card p {
-    margin-bottom: 18px;
-}
-
-
-/* ==========================
-   즐겨찾기
-========================== */
-
-#favoriteList {
-    background: white;
-    border-radius: 18px;
-    padding: 25px;
-    color: #66777c;
+.course-card button {
+    margin-top: 10px;
 }
 
 
 /* ==========================
-   하단 네비게이션
+   하단 메뉴
 ========================== */
 
 .bottom-nav {
     position: fixed;
+
     bottom: 0;
+
     left: 0;
-    width: 100%;
-    height: 70px;
+
+    right: 0;
+
+    height: 75px;
+
     background: white;
-    border-top: 1px solid #e5eeee;
 
     display: flex;
+
     justify-content: space-around;
+
     align-items: center;
 
-    z-index: 100;
+    border-top: 1px solid #ddd;
+
+    z-index: 999;
 }
 
 .bottom-nav button {
     background: none;
-    color: #52666d;
+
+    font-size: 22px;
+
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     gap: 4px;
-    font-size: 19px;
 }
 
 .bottom-nav span {
-    font-size: 11px;
+    font-size: 12px;
 }
 
 
 /* ==========================
-   모바일 화면
+   모바일
 ========================== */
 
-@media (max-width: 500px) {
-
-    main {
-        padding: 15px;
-    }
+@media (max-width: 600px) {
 
     .hero h1 {
-        font-size: 29px;
+        font-size: 32px;
     }
 
     .map-area {
-        height: 350px;
+        height: 450px;
     }
 
 }
