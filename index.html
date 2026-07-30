@@ -1,1 +1,2154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+<title>부산 바다, 오늘</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<!-- 지도 -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+
+:root{
+  --ink:#0a2a2e;
+  --deep:#0d3d40;
+  --tide:#1b6e6a;
+  --foam:#eef6f2;
+  --sand:#f4ecd8;
+  --sand2:#e9dcb9;
+  --coral:#ef7350;
+  --gold:#d9a441;
+  --line:rgba(10,42,46,0.12);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  background:var(--sand);
+  font-family:'Noto Sans KR',system-ui,sans-serif;
+  color:var(--ink);
+  -webkit-tap-highlight-color:transparent;
+}
+
+#app{
+  max-width:460px;
+  margin:0 auto;
+  min-height:100vh;
+  background:var(--sand);
+  position:relative;
+  padding-bottom:88px;
+}
+
+.tab-panel{
+  display:none;
+}
+
+.tab-panel.active{
+  display:block;
+  animation:fadein .16s ease-out;
+}
+
+@keyframes fadein{
+  from{
+    opacity:0;
+    transform:translateY(6px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+  background:linear-gradient(160deg,var(--deep) 0%,var(--ink) 100%);
+  color:var(--foam);
+  padding:26px 22px 34px;
+  position:relative;
+  overflow:hidden;
+}
+
+header .eyebrow{
+  font-size:11.5px;
+  letter-spacing:2px;
+  color:#9fd3c8;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+header h1{
+  font-family:'Noto Serif KR',serif;
+  font-size:26px;
+  font-weight:700;
+  margin:0 0 4px;
+}
+
+header .sub{
+  font-size:12.5px;
+  color:#bfe0d8;
+}
+
+.wave-sig{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-1px;
+  height:46px;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+section{
+  padding:0 20px;
+  margin-top:22px;
+}
+
+section:first-child{
+  margin-top:20px;
+}
+
+.label{
+  font-size:11.5px;
+  letter-spacing:1.5px;
+  color:var(--tide);
+  font-weight:700;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.label .hint{
+  font-size:10.5px;
+  color:#8a9d9a;
+  letter-spacing:0;
+  font-weight:500;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+#bottom-nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:40;
+  max-width:460px;
+  margin:0 auto;
+  background:#fff;
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+  box-shadow:0 -6px 18px rgba(13,61,64,.10);
+}
+
+.nav-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  padding:6px 10px;
+  border-radius:12px;
+  cursor:pointer;
+  color:#8fa3a0;
+  flex:1;
+}
+
+.nav-btn .nav-icon{
+  font-size:19px;
+}
+
+.nav-btn .nav-label{
+  font-size:10.5px;
+  font-weight:700;
+}
+
+.nav-btn.active{
+  color:var(--tide);
+}
+
+/* =========================
+   HOME
+========================= */
+
+.trend-scroll{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:4px;
+}
+
+.trend-chip{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:8px 14px;
+  font-size:12.5px;
+  font-weight:700;
+}
+
+.trend-chip .rank{
+  color:var(--coral);
+  font-weight:900;
+}
+
+.brief-card{
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 10px 24px rgba(13,61,64,.10);
+  border:1px solid var(--line);
+}
+
+.brief-place{
+  font-family:'Noto Serif KR',serif;
+  font-size:18px;
+  font-weight:700;
+}
+
+.brief-comment{
+  margin-top:4px;
+  font-size:13.5px;
+  color:#3d5a58;
+  line-height:1.55;
+}
+
+.metric-row{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:16px;
+}
+
+.metric{
+  background:var(--sand);
+  border-radius:12px;
+  padding:10px 8px;
+  text-align:center;
+}
+
+.metric .v{
+  font-size:16px;
+  font-weight:900;
+}
+
+.metric .k{
+  font-size:10.5px;
+  color:#7a8f8c;
+}
+
+.beach-pills{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  margin-top:14px;
+}
+
+.pill{
+  flex:0 0 auto;
+  padding:7px 14px;
+  border-radius:999px;
+  font-size:12.5px;
+  font-weight:700;
+  background:#fff;
+  border:1px solid var(--line);
+  cursor:pointer;
+}
+
+.pill.active{
+  background:var(--tide);
+  color:#fff;
+}
+
+/* =========================
+   SPOTS
+========================= */
+
+.card-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.spot-card{
+  background:#fff;
+  border-radius:16px;
+  overflow:hidden;
+  cursor:pointer;
+  box-shadow:0 8px 18px rgba(13,61,64,.10);
+  border:1px solid var(--line);
+}
+
+.spot-img{
+  height:96px;
+  position:relative;
+  background-size:cover;
+  background-position:center;
+}
+
+.spot-img .badge{
+  position:absolute;
+  top:8px;
+  left:8px;
+  background:rgba(10,42,46,.7);
+  color:#fff;
+  font-size:10px;
+  font-weight:700;
+  padding:3px 8px;
+  border-radius:999px;
+}
+
+.spot-body{
+  padding:10px 12px 12px;
+}
+
+.spot-name{
+  font-family:'Noto Serif KR',serif;
+  font-weight:700;
+  font-size:13.5px;
+}
+
+.spot-desc{
+  font-size:11.5px;
+  color:#5c6d6b;
+  margin-top:3px;
+}
+
+/* =========================
+   MAP
+========================= */
+
+.map-filter{
+  display:flex;
+  gap:7px;
+  overflow-x:auto;
+  padding-bottom:10px;
+}
+
+.map-filter-btn{
+  flex:0 0 auto;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  border-radius:999px;
+  padding:8px 13px;
+  font-size:11.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.map-filter-btn.active{
+  background:var(--tide);
+  color:#fff;
+  border-color:var(--tide);
+}
+
+.map-wrapper{
+  position:relative;
+  width:100%;
+  height:480px;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  box-shadow:0 10px 24px rgba(13,61,64,.10);
+}
+
+#map{
+  width:100%;
+  height:100%;
+}
+
+#my-location-btn{
+  position:absolute;
+  right:14px;
+  bottom:14px;
+  z-index:1000;
+  border:none;
+  background:#fff;
+  color:var(--ink);
+  padding:11px 14px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:800;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+  cursor:pointer;
+}
+
+.map-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+  font-size:10.5px;
+  color:#5c6d6b;
+}
+
+/* =========================
+   COURSE
+========================= */
+
+.group-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+.group-btn{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px 6px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.group-btn .emoji{
+  font-size:20px;
+  display:block;
+}
+
+.group-btn .name{
+  font-size:11.5px;
+  font-weight:700;
+}
+
+.group-btn.active{
+  background:var(--coral);
+  border-color:var(--coral);
+}
+
+.group-btn.active .name{
+  color:#fff;
+}
+
+.course-card{
+  background:#fff;
+  border-radius:18px;
+  padding:18px 18px 6px;
+  box-shadow:0 10px 24px rgba(13,61,64,.08);
+  border:1px solid var(--line);
+}
+
+.course-item{
+  display:flex;
+  gap:14px;
+  padding-bottom:18px;
+  position:relative;
+  cursor:pointer;
+}
+
+.course-item:not(:last-child)::before{
+  content:'';
+  position:absolute;
+  left:17px;
+  top:44px;
+  bottom:-4px;
+  width:2px;
+  background:var(--sand2);
+}
+
+.course-time{
+  flex:0 0 36px;
+  height:36px;
+  border-radius:50%;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+  z-index:1;
+}
+
+.course-time.spot{
+  background:var(--tide);
+}
+
+.course-time.food{
+  background:var(--coral);
+}
+
+.course-thumb{
+  flex:0 0 64px;
+  height:64px;
+  border-radius:12px;
+  background-size:cover;
+  background-position:center;
+}
+
+.course-body{
+  flex:1;
+  min-width:0;
+}
+
+.course-body .when{
+  font-size:11px;
+  color:var(--tide);
+  font-weight:700;
+}
+
+.course-body.food .when{
+  color:var(--coral);
+}
+
+.course-body .place{
+  font-size:14.5px;
+  font-weight:700;
+  margin:2px 0 3px;
+  font-family:'Noto Serif KR',serif;
+}
+
+.course-body .desc{
+  font-size:12px;
+  color:#5c6d6b;
+}
+
+/* =========================
+   TIP
+========================= */
+
+.tip-card{
+  background:linear-gradient(135deg,var(--gold),#c98a2c);
+  border-radius:18px;
+  padding:18px 20px;
+  color:#2c1c04;
+}
+
+.tip-label{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1.5px;
+}
+
+.tip-text{
+  font-size:14px;
+  font-weight:700;
+  line-height:1.55;
+  margin-top:6px;
+}
+
+.tip-date{
+  font-size:10.5px;
+  margin-top:10px;
+}
+
+/* =========================
+   MY COURSE
+========================= */
+
+.builder-card{
+  background:#fff;
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 10px 24px rgba(13,61,64,.08);
+  border:1px solid var(--line);
+}
+
+.builder-tabs{
+  display:flex;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.builder-tab{
+  flex:1;
+  text-align:center;
+  padding:8px;
+  border-radius:10px;
+  font-size:12px;
+  font-weight:700;
+  background:var(--sand);
+  cursor:pointer;
+}
+
+.builder-tab.active{
+  background:var(--tide);
+  color:#fff;
+}
+
+.builder-source{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:16px;
+}
+
+.source-chip{
+  background:var(--sand);
+  border-radius:999px;
+  padding:7px 12px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.source-chip.added{
+  background:#dff2ec;
+  border:1px solid var(--tide);
+  color:var(--tide);
+}
+
+.my-course-title{
+  font-size:12px;
+  font-weight:700;
+  color:var(--tide);
+  margin-bottom:8px;
+}
+
+.my-course-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.my-course-empty{
+  font-size:12px;
+  color:#9fb0ad;
+  padding:14px 0;
+  text-align:center;
+}
+
+.my-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:var(--sand);
+  border-radius:12px;
+  padding:8px 10px;
+}
+
+.my-item .num{
+  flex:0 0 22px;
+  height:22px;
+  border-radius:50%;
+  background:var(--tide);
+  color:#fff;
+  font-size:11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.my-item .name{
+  flex:1;
+  font-size:12.5px;
+  font-weight:700;
+}
+
+.my-item .remove,
+.my-item .move{
+  cursor:pointer;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+#modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(6,20,22,.6);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  z-index:50;
+}
+
+#modal-backdrop.open{
+  display:flex;
+}
+
+#modal{
+  background:#fff;
+  width:100%;
+  max-width:460px;
+  border-radius:20px 20px 0 0;
+  max-height:82vh;
+  overflow-y:auto;
+}
+
+.modal-img{
+  height:180px;
+  background-size:cover;
+  background-position:center;
+  position:relative;
+}
+
+.modal-close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  background:rgba(10,42,46,.55);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.modal-badge{
+  position:absolute;
+  top:12px;
+  left:12px;
+  background:rgba(10,42,46,.65);
+  color:#fff;
+  padding:4px 10px;
+  border-radius:999px;
+}
+
+.modal-body{
+  padding:20px 22px 28px;
+}
+
+.modal-name{
+  font-family:'Noto Serif KR',serif;
+  font-size:19px;
+  font-weight:700;
+}
+
+.modal-tagline{
+  font-size:12.5px;
+  color:var(--tide);
+  font-weight:700;
+  margin-top:2px;
+}
+
+.modal-desc{
+  font-size:13.5px;
+  color:#3d5a58;
+  line-height:1.7;
+  margin-top:12px;
+}
+
+.modal-meta{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+.meta-pill{
+  background:var(--sand);
+  border-radius:999px;
+  padding:6px 12px;
+  font-size:11.5px;
+  font-weight:700;
+}
+
+.modal-add{
+  margin-top:18px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:var(--coral);
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.modal-add.added{
+  background:var(--tide);
+}
+
+footer{
+  text-align:center;
+  font-size:10.5px;
+  color:#8a9d9a;
+  padding:26px 20px 8px;
+  line-height:1.6;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<header>
+
+<div class="eyebrow" id="today-date"></div>
+
+<h1>부산 바다, 오늘</h1>
+
+<div class="sub">
+그날의 바다를 읽고, 오늘 가장 좋은 코스를 추천해요
+</div>
+
+<svg class="wave-sig" viewBox="0 0 460 46" preserveAspectRatio="none">
+<path
+d="M0,20 C60,40 120,0 180,18 C240,36 300,4 360,20 C400,30 430,22 460,18 L460,46 L0,46 Z"
+fill="#f4ecd8">
+</path>
+</svg>
+
+</header>
+
+
+<!-- =========================
+     HOME
+========================= -->
+
+<div class="tab-panel active" id="panel-home">
+
+<section>
+
+<div class="label">
+오늘의 인기 검색어
+</div>
+
+<div class="trend-scroll" id="trend-scroll"></div>
+
+</section>
+
+
+<section>
+
+<div class="label">
+오늘의 바다 브리핑
+</div>
+
+<div class="brief-card">
+
+<div class="brief-place" id="brief-place"></div>
+
+<div class="brief-comment" id="brief-comment"></div>
+
+<div class="metric-row">
+
+<div class="metric">
+<div class="v" id="m-wave"></div>
+<div class="k">파도 높이</div>
+</div>
+
+<div class="metric">
+<div class="v" id="m-temp"></div>
+<div class="k">수온</div>
+</div>
+
+<div class="metric">
+<div class="v" id="m-tide"></div>
+<div class="k">물때</div>
+</div>
+
+</div>
+
+<div class="beach-pills" id="beach-pills"></div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- =========================
+     MAP
+========================= -->
+
+<div class="tab-panel" id="panel-map">
+
+<section>
+
+<div class="label">
+
+부산 바다 지도
+
+<span class="hint">
+주변 장소를 찾아보세요
+</span>
+
+</div>
+
+
+<div class="map-filter">
+
+<button class="map-filter-btn active" data-filter="all">
+전체
+</button>
+
+<button class="map-filter-btn" data-filter="spot">
+🔵 관광지
+</button>
+
+<button class="map-filter-btn" data-filter="food">
+🟠 음식점
+</button>
+
+<button class="map-filter-btn" data-filter="leisure">
+🟢 레저
+</button>
+
+</div>
+
+
+<div class="map-wrapper">
+
+<div id="map"></div>
+
+<button id="my-location-btn">
+📍 현재 위치
+</button>
+
+</div>
+
+
+<div class="map-legend">
+
+<span>🔵 관광지</span>
+<span>🟠 음식점</span>
+<span>🟢 레저</span>
+<span>🔴 내 위치</span>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- =========================
+     SPOTS
+========================= -->
+
+<div class="tab-panel" id="panel-spots">
+
+<section>
+
+<div class="label">
+부산 바다 명소
+<span class="hint">탭하면 자세히 보여요</span>
+</div>
+
+<div class="card-grid" id="spot-grid"></div>
+
+</section>
+
+</div>
+
+
+<!-- =========================
+     COURSE
+========================= -->
+
+<div class="tab-panel" id="panel-course">
+
+<section>
+
+<div class="label">
+누구와 가시나요
+</div>
+
+<div class="group-grid" id="group-grid"></div>
+
+</section>
+
+
+<section>
+
+<div class="label">
+오늘의 추천 코스
+<span class="hint">탭하면 자세히 보여요</span>
+</div>
+
+<div class="course-card" id="course-card"></div>
+
+</section>
+
+
+<section>
+
+<div class="label">
+오늘의 관광 팁
+</div>
+
+<div class="tip-card">
+
+<div class="tip-label">
+TODAY'S TIP
+</div>
+
+<div class="tip-text" id="tip-text"></div>
+
+<div class="tip-date">
+매일 자정에 새 팁으로 갱신돼요
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- =========================
+     MY COURSE
+========================= -->
+
+<div class="tab-panel" id="panel-mine">
+
+<section>
+
+<div class="label">
+나만의 코스 만들기
+</div>
+
+<div class="builder-card">
+
+<div class="builder-tabs">
+
+<div class="builder-tab active" data-type="spot">
+명소
+</div>
+
+<div class="builder-tab" data-type="food">
+맛집
+</div>
+
+</div>
+
+<div class="builder-source" id="builder-source"></div>
+
+<div class="my-course-title">
+내가 만든 코스 (<span id="my-count">0</span>곳)
+</div>
+
+<div class="my-course-list" id="my-course-list"></div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<footer>
+
+※ 명소·맛집 설명은 시연용 예시입니다.
+
+</footer>
+
+</div>
+
+
+<!-- =========================
+     NAV
+========================= -->
+
+<nav id="bottom-nav">
+
+<div class="nav-btn active" data-panel="home">
+<span class="nav-icon">🏠</span>
+<span class="nav-label">홈</span>
+</div>
+
+<div class="nav-btn" data-panel="map">
+<span class="nav-icon">🗺️</span>
+<span class="nav-label">지도</span>
+</div>
+
+<div class="nav-btn" data-panel="course">
+<span class="nav-icon">🧭</span>
+<span class="nav-label">코스</span>
+</div>
+
+<div class="nav-btn" data-panel="mine">
+<span class="nav-icon">✏️</span>
+<span class="nav-label">마이코스</span>
+</div>
+
+</nav>
+
+
+<!-- =========================
+     MODAL
+========================= -->
+
+<div id="modal-backdrop">
+
+<div id="modal">
+
+<div class="modal-img" id="modal-img">
+
+<div class="modal-badge" id="modal-badge"></div>
+
+<div class="modal-close" id="modal-close">
+✕
+</div>
+
+</div>
+
+<div class="modal-body">
+
+<div class="modal-name" id="modal-name"></div>
+
+<div class="modal-tagline" id="modal-tagline"></div>
+
+<div class="modal-desc" id="modal-desc"></div>
+
+<div class="modal-meta" id="modal-meta"></div>
+
+<button class="modal-add" id="modal-add">
++ 내 코스에 담기
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- 지도 라이브러리 -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+<script>
+
+(function(){
+
+
+/* ==========================
+   DATA
+========================== */
+
+const BEACHES = [
+
+{
+key:'haeundae',
+name:'해운대',
+wave:'0.3m',
+temp:'24°C',
+tide:'간조 14:20',
+comment:'파도가 잔잔하고 하늘이 맑아요. 산책과 사진 찍기 좋은 날입니다.'
+},
+
+{
+key:'gwangalli',
+name:'광안리',
+wave:'0.5m',
+temp:'23°C',
+tide:'만조 11:40',
+comment:'광안대교 야경이 선명하게 보이는 날이에요.'
+},
+
+{
+key:'songjeong',
+name:'송정',
+wave:'0.8m',
+temp:'22°C',
+tide:'간조 15:10',
+comment:'파도가 조금 있어 서핑하기 좋은 컨디션이에요.'
+},
+
+{
+key:'dadaepo',
+name:'다대포',
+wave:'0.2m',
+temp:'24°C',
+tide:'간조 13:50',
+comment:'물때가 낮아 갯벌이 넓게 드러나는 날이에요.'
+}
+
+];
+
+
+const TRENDS = [
+
+'#다대포노을',
+'#광안리불꽃축제',
+'#흰여울문화마을',
+'#송정서핑체험',
+'#동백섬산책길'
+
+];
+
+
+const SPOTS = {
+
+haeundae:{
+type:'spot',
+name:'해운대 해수욕장',
+tagline:'부산 여행의 시작점',
+img:'beach1',
+badge:'해운대',
+desc:'넓은 백사장과 부산의 대표적인 바다 풍경을 즐길 수 있는 해변이에요.',
+meta:['도보 산책','시장 구경','야경']
+},
+
+dongbaek:{
+type:'spot',
+name:'동백섬',
+tagline:'해안 산책로',
+img:'beach2',
+badge:'해운대',
+desc:'해운대 옆 해안 산책로를 따라 바다 풍경을 즐길 수 있어요.',
+meta:['산책로','무료 관람','포토스팟']
+},
+
+cheongsapo:{
+type:'spot',
+name:'청사포 다릿돌전망대',
+tagline:'해안 전망 명소',
+img:'beach3',
+badge:'청사포',
+desc:'청사포의 바다 풍경을 한눈에 볼 수 있는 전망대예요.',
+meta:['전망대','사진 명소']
+},
+
+gwangalli:{
+type:'spot',
+name:'광안리 해수욕장',
+tagline:'야경으로 유명한 밤바다',
+img:'beach4',
+badge:'광안리',
+desc:'광안대교와 바다 풍경을 함께 즐길 수 있는 부산 대표 명소예요.',
+meta:['야경','카페 거리']
+},
+
+huinnyeoul:{
+type:'spot',
+name:'흰여울문화마을',
+tagline:'감성 골목길',
+img:'beach5',
+badge:'영도',
+desc:'골목과 바다 풍경을 함께 즐길 수 있는 장소예요.',
+meta:['골목 산책','포토스팟']
+},
+
+dadaepo:{
+type:'spot',
+name:'다대포 해수욕장',
+tagline:'노을 명소',
+img:'beach6',
+badge:'다대포',
+desc:'넓은 바다와 아름다운 노을로 유명한 장소예요.',
+meta:['노을','갯벌 체험']
+},
+
+songjeong:{
+type:'spot',
+name:'송정 해수욕장',
+tagline:'서핑 명소',
+img:'beach7',
+badge:'송정',
+desc:'서핑과 해변 산책을 즐길 수 있는 장소예요.',
+meta:['서핑','피크닉']
+},
+
+songdo:{
+type:'spot',
+name:'송도 구름산책로',
+tagline:'바다 위 산책로',
+img:'beach8',
+badge:'송도',
+desc:'바다 위를 걸으며 부산의 해안 풍경을 감상할 수 있어요.',
+meta:['산책로','케이블카']
+}
+
+};
+
+
+const FOODS = {
+
+gejang:{
+type:'food',
+name:'광안리 게장정식집',
+tagline:'광안리 대표 로컬 맛집',
+img:'food1',
+badge:'점심 추천',
+desc:'광안리에서 식사를 즐기기 좋은 맛집이에요.',
+meta:['게장정식','점심']
+},
+
+milmyeon:{
+type:'food',
+name:'해운대 밀면집',
+tagline:'부산 대표 음식',
+img:'food2',
+badge:'점심 추천',
+desc:'부산의 대표 음식인 밀면을 맛볼 수 있어요.',
+meta:['밀면','부산 음식']
+},
+
+jogae:{
+type:'food',
+name:'다대포 조개구이·해물집',
+tagline:'노을 보며 즐기는 저녁',
+img:'food3',
+badge:'저녁 추천',
+desc:'다대포에서 해산물 요리를 즐길 수 있어요.',
+meta:['조개구이','해산물']
+},
+
+surfcafe:{
+type:'food',
+name:'송정 서퍼 브런치 카페',
+tagline:'서퍼들의 아지트',
+img:'food4',
+badge:'점심 추천',
+desc:'송정 바다를 바라보며 브런치를 즐길 수 있어요.',
+meta:['브런치','오션뷰']
+},
+
+huinnyeoulcafe:{
+type:'food',
+name:'흰여울 감성 카페',
+tagline:'바다 전망 카페',
+img:'food5',
+badge:'저녁 추천',
+desc:'바다 전망을 즐기며 쉬어가기 좋은 카페예요.',
+meta:['카페','오션뷰']
+}
+
+};
+
+
+const ALL_CARDS =
+Object.assign({},SPOTS,FOODS);
+
+
+/* ==========================
+   지도 장소
+========================== */
+
+const MAP_PLACES = [
+
+/* 관광지 */
+
+{
+type:'spot',
+name:'해운대 해수욕장',
+lat:35.1587,
+lng:129.1604
+},
+
+{
+type:'spot',
+name:'동백섬',
+lat:35.1532,
+lng:129.1526
+},
+
+{
+type:'spot',
+name:'청사포 다릿돌전망대',
+lat:35.1600,
+lng:129.2008
+},
+
+{
+type:'spot',
+name:'광안리 해수욕장',
+lat:35.1532,
+lng:129.1186
+},
+
+{
+type:'spot',
+name:'흰여울문화마을',
+lat:35.0788,
+lng:129.0450
+},
+
+{
+type:'spot',
+name:'다대포 해수욕장',
+lat:35.0462,
+lng:128.9662
+},
+
+{
+type:'spot',
+name:'송정 해수욕장',
+lat:35.1789,
+lng:129.1991
+},
+
+{
+type:'spot',
+name:'송도 구름산책로',
+lat:35.0750,
+lng:129.0170
+},
+
+
+/* 음식점 */
+
+{
+type:'food',
+name:'광안리 게장정식집',
+lat:35.1535,
+lng:129.1180
+},
+
+{
+type:'food',
+name:'해운대 밀면집',
+lat:35.1612,
+lng:129.1635
+},
+
+{
+type:'food',
+name:'다대포 조개구이·해물집',
+lat:35.0465,
+lng:128.9668
+},
+
+{
+type:'food',
+name:'송정 서퍼 브런치 카페',
+lat:35.1793,
+lng:129.1985
+},
+
+{
+type:'food',
+name:'흰여울 감성 카페',
+lat:35.0785,
+lng:129.0445
+},
+
+
+/* 레저 */
+
+{
+type:'leisure',
+name:'송정 서핑',
+lat:35.1789,
+lng:129.1991
+},
+
+{
+type:'leisure',
+name:'송도 해상 케이블카',
+lat:35.0762,
+lng:129.0177
+},
+
+{
+type:'leisure',
+name:'다대포 갯벌 체험',
+lat:35.0462,
+lng:128.9662
+}
+
+];
+
+
+const GROUPS = [
+
+{
+key:'solo',
+emoji:'🚶',
+name:'혼자',
+course:[
+{time:'오전',type:'spot',key:'huinnyeoul'},
+{time:'점심',type:'food',key:'surfcafe'},
+{time:'오후',type:'spot',key:'cheongsapo'}
+]
+},
+
+{
+key:'couple',
+emoji:'💑',
+name:'커플',
+course:[
+{time:'오전',type:'spot',key:'dadaepo'},
+{time:'점심',type:'food',key:'gejang'},
+{time:'저녁',type:'spot',key:'gwangalli'}
+]
+},
+
+{
+key:'family',
+emoji:'👨‍👩‍👧',
+name:'가족',
+course:[
+{time:'오전',type:'spot',key:'dadaepo'},
+{time:'점심',type:'food',key:'milmyeon'},
+{time:'오후',type:'spot',key:'haeundae'}
+]
+},
+
+{
+key:'group',
+emoji:'🎉',
+name:'단체',
+course:[
+{time:'오전',type:'spot',key:'songjeong'},
+{time:'점심',type:'food',key:'surfcafe'},
+{time:'저녁',type:'food',key:'jogae'}
+]
+}
+
+];
+
+
+const TIPS = [
+
+'오늘은 물때가 낮아 다대포 갯벌 체험이 가능해요.',
+'광안리에서는 바다와 광안대교 야경을 함께 즐겨보세요.',
+'평일 오전엔 해운대 산책을 추천해요.',
+'송정 해변은 서핑을 즐기기 좋은 장소예요.',
+'다대포 노을은 일몰 전 방문을 추천해요.',
+'광안리 밤바다는 야경을 즐기기 좋아요.'
+
+];
+
+
+/* ==========================
+   이미지
+========================== */
+
+const IMG_STYLE = {
+
+beach1:{c1:'#2f8f9c',c2:'#0d3d40',emoji:'🏖️'},
+beach2:{c1:'#4fae8a',c2:'#0d3d40',emoji:'🌳'},
+beach3:{c1:'#3a7ca5',c2:'#0a2a2e',emoji:'🌉'},
+beach4:{c1:'#274b8f',c2:'#0a1a3a',emoji:'🌃'},
+beach5:{c1:'#7c9db0',c2:'#33505c',emoji:'🏘️'},
+beach6:{c1:'#e8874a',c2:'#7a3a1e',emoji:'🌇'},
+beach7:{c1:'#2aa3a3',c2:'#0d4d4d',emoji:'🏄'},
+beach8:{c1:'#3d8fb0',c2:'#0d2f40',emoji:'🚡'},
+
+food1:{c1:'#c9502f',c2:'#5c1f10',emoji:'🦀'},
+food2:{c1:'#d9a441',c2:'#7a5a1e',emoji:'🍜'},
+food3:{c1:'#b5502e',c2:'#4a1f10',emoji:'🦪'},
+food4:{c1:'#4fae8a',c2:'#1e5c46',emoji:'☕'},
+food5:{c1:'#8a7a9d',c2:'#3a2f4a',emoji:'🍵'}
+
+};
+
+
+function imgUrl(token,w,h){
+
+const s=IMG_STYLE[token] || {
+c1:'#2f8f9c',
+c2:'#0d3d40',
+emoji:'🌊'
+};
+
+const svg=`
+
+<svg xmlns="http://www.w3.org/2000/svg"
+width="${w}" height="${h}">
+
+<defs>
+
+<linearGradient id="g"
+x1="0" y1="0"
+x2="1" y2="1">
+
+<stop offset="0%" stop-color="${s.c1}"/>
+
+<stop offset="100%" stop-color="${s.c2}"/>
+
+</linearGradient>
+
+</defs>
+
+<rect
+width="${w}"
+height="${h}"
+fill="url(#g)"
+/>
+
+<text
+x="50%"
+y="50%"
+font-size="${Math.round(Math.min(w,h)*.34)}"
+text-anchor="middle"
+dominant-baseline="middle">
+
+${s.emoji}
+
+</text>
+
+</svg>
+`;
+
+return 'data:image/svg+xml;utf8,'+
+encodeURIComponent(svg);
+
+}
+
+
+/* ==========================
+   STATE
+========================== */
+
+let currentBeach='haeundae';
+
+let currentGroup='solo';
+
+let builderType='spot';
+
+let myCourse=[];
+
+let busanMap=null;
+
+let mapMarkers=[];
+
+let userMarker=null;
+
+
+/* ==========================
+   HOME
+========================== */
+
+function renderTrends(){
+
+const wrap=
+document.getElementById('trend-scroll');
+
+wrap.innerHTML='';
+
+TRENDS.forEach((t,i)=>{
+
+const el=document.createElement('div');
+
+el.className='trend-chip';
+
+el.innerHTML=
+`<span class="rank">${i+1}</span>
+<span>${t}</span>`;
+
+wrap.appendChild(el);
+
+});
+
+}
+
+
+function renderPills(){
+
+const wrap=
+document.getElementById('beach-pills');
+
+wrap.innerHTML='';
+
+BEACHES.forEach(b=>{
+
+const el=document.createElement('div');
+
+el.className=
+'pill'+
+(b.key===currentBeach?' active':'');
+
+el.textContent=b.name;
+
+el.onclick=()=>{
+
+currentBeach=b.key;
+
+renderBrief();
+
+renderPills();
+
+};
+
+wrap.appendChild(el);
+
+});
+
+}
+
+
+function renderBrief(){
+
+const b=
+BEACHES.find(x=>x.key===currentBeach);
+
+document.getElementById('brief-place')
+.textContent=b.name;
+
+document.getElementById('brief-comment')
+.textContent=b.comment;
+
+document.getElementById('m-wave')
+.textContent=b.wave;
+
+document.getElementById('m-temp')
+.textContent=b.temp;
+
+document.getElementById('m-tide')
+.textContent=b.tide;
+
+}
+
+
+/* ==========================
+   SPOTS
+========================== */
+
+function renderSpotGrid(){
+
+const wrap=
+document.getElementById('spot-grid');
+
+wrap.innerHTML='';
+
+Object.keys(SPOTS).forEach(key=>{
+
+const s=SPOTS[key];
+
+const el=document.createElement('div');
+
+el.className='spot-card';
+
+el.innerHTML=`
+
+<div class="spot-img"
+style="background-image:url('${imgUrl(s.img,300,200)}')">
+
+<div class="badge">
+${s.badge}
+</div>
+
+</div>
+
+<div class="spot-body">
+
+<div class="spot-name">
+${s.name}
+</div>
+
+<div class="spot-desc">
+${s.tagline}
+</div>
+
+</div>
+
+`;
+
+el.onclick=()=>openModal(key);
+
+wrap.appendChild(el);
+
+});
+
+}
+
+
+/* ==========================
+   COURSE
+========================== */
+
+function renderGroups(){
+
+const wrap=
+document.getElementById('group-grid');
+
+wrap.innerHTML='';
+
+GROUPS.forEach(g=>{
+
+const el=document.createElement('div');
+
+el.className=
+'group-btn'+
+(g.key===currentGroup?' active':'');
+
+el.innerHTML=`
+
+<span class="emoji">
+${g.emoji}
+</span>
+
+<span class="name">
+${g.name}
+</span>
+
+`;
+
+el.onclick=()=>{
+
+currentGroup=g.key;
+
+renderGroups();
+
+renderCourse();
+
+};
+
+wrap.appendChild(el);
+
+});
+
+}
+
+
+function renderCourse(){
+
+const g=
+GROUPS.find(x=>x.key===currentGroup);
+
+const wrap=
+document.getElementById('course-card');
+
+wrap.innerHTML='';
+
+g.course.forEach(c=>{
+
+const card=ALL_CARDS[c.key];
+
+const isFood=c.type==='food';
+
+const el=document.createElement('div');
+
+el.className='course-item';
+
+el.innerHTML=`
+
+<div class="course-row">
+
+<div class="course-time ${isFood?'food':'spot'}">
+${isFood?'🍽':'📍'}
+</div>
+
+<div class="course-thumb"
+style="background-image:url('${imgUrl(card.img,140,140)}')">
+</div>
+
+<div class="course-body ${isFood?'food':''}">
+
+<div class="when">
+${c.time}${isFood?' · 식사':''}
+</div>
+
+<div class="place">
+${card.name}
+</div>
+
+<div class="desc">
+${card.tagline}
+</div>
+
+</div>
+
+</div>
+
+`;
+
+el.onclick=()=>openModal(c.key);
+
+wrap.appendChild(el);
+
+});
+
+}
+
+
+/* ==========================
+   TIP
+========================== */
+
+function renderTip(){
+
+const index=
+new Date().getDate()%TIPS.length;
+
+document.getElementById('tip-text')
+.textContent=TIPS[index];
+
+}
+
+
+/* ==========================
+   DATE
+========================== */
+
+function renderDate(){
+
+const d=new Date();
+
+const days=
+['일','월','화','수','목','금','토'];
+
+document.getElementById('today-date')
+.textContent=
+`${d.getMonth()+1}월 ${d.getDate()}일 · ${days[d.getDay()]}요일`;
+
+}
+
+
+/* ==========================
+   BUILDER
+========================== */
+
+function renderBuilderTabs(){
+
+document.querySelectorAll('.builder-tab')
+.forEach(el=>{
+
+el.classList.toggle(
+'active',
+el.dataset.type===builderType
+);
+
+el.onclick=()=>{
+
+builderType=el.dataset.type;
+
+renderBuilderTabs();
+
+renderBuilderSource();
+
+};
+
+});
+
+}
+
+
+function renderBuilderSource(){
+
+const wrap=
+document.getElementById('builder-source');
+
+wrap.innerHTML='';
+
+const source=
+builderType==='spot'
+?SPOTS
+:FOODS;
+
+Object.keys(source).forEach(key=>{
+
+const c=source[key];
+
+const added=
+myCourse.includes(key);
+
+const el=document.createElement('div');
+
+el.className=
+'source-chip'+
+(added?' added':'');
+
+el.innerHTML=
+`${added?'✓ ':'+ '}${c.name}`;
+
+el.onclick=()=>toggleMyCourse(key);
+
+wrap.appendChild(el);
+
+});
+
+}
+
+
+function toggleMyCourse(key){
+
+const index=
+myCourse.indexOf(key);
+
+if(index===-1){
+
+myCourse.push(key);
+
+}else{
+
+myCourse.splice(index,1);
+
+}
+
+renderBuilderSource();
+
+renderMyCourse();
+
+}
+
+
+function moveItem(key,dir){
+
+const index=
+myCourse.indexOf(key);
+
+const newIndex=
+index+dir;
+
+if(
+newIndex<0 ||
+newIndex>=myCourse.length
+)return;
+
+[
+myCourse[index],
+myCourse[newIndex]
+]=[
+myCourse[newIndex],
+myCourse[index]
+];
+
+renderMyCourse();
+
+}
+
+
+function renderMyCourse(){
+
+document.getElementById('my-count')
+.textContent=myCourse.length;
+
+const wrap=
+document.getElementById('my-course-list');
+
+wrap.innerHTML='';
+
+if(myCourse.length===0){
+
+wrap.innerHTML=
+'<div class="my-course-empty">위에서 명소·맛집을 선택해 나만의 코스를 만들어보세요</div>';
+
+return;
+
+}
+
+myCourse.forEach((key,i)=>{
+
+const c=ALL_CARDS[key];
+
+const el=document.createElement('div');
+
+el.className='my-item';
+
+el.innerHTML=`
+
+<div class="num">
+${i+1}
+</div>
+
+<div class="name">
+${c.name}
+</div>
+
+<div class="move" data-dir="-1">
+▲
+</div>
+
+<div class="move" data-dir="1">
+▼
+</div>
+
+<div class="remove">
+✕
+</div>
+
+`;
+
+el.querySelector('.remove')
+.onclick=()=>toggleMyCourse(key);
+
+el.querySelectorAll('.move')
+.forEach(btn=>{
+
+btn.onclick=()=>{
+
+moveItem(
+key,
+parseInt(btn.dataset.dir)
+);
+
+};
+
+});
+
+wrap.appendChild(el);
+
+});
+
+}
+
+
+/* ==========================
+   MODAL
+========================== */
+
+function openModal(key){
+
+const c=ALL_CARDS[key];
+
+document.getElementById('modal-img')
+.style.backgroundImage=
+`url('${imgUrl(c.img,700,500)}')`;
+
+document.getElementById('modal-badge')
+.textContent=c.badge;
+
+document.getElementById('modal-name')
+.textContent=c.name;
+
+document.getElementById('modal-tagline')
+.textContent=c.tagline;
+
+document.getElementById('modal-desc')
+.textContent=c.desc;
+
+document.getElementById('modal-meta')
+.innerHTML=
+c.meta
+.map(m=>`<div class="meta-pill">${m}</div>`)
+.join('');
+
+const addBtn=
+document.getElementById('modal-add');
+
+const isAdded=
+myCourse.includes(key);
+
+addBtn.textContent=
+isAdded
+?'✓ 내 코스에 담겼어요'
+:'+ 내 코스에 담기';
+
+addBtn.classList.toggle(
+'added',
+isAdded
+);
+
+addBtn.onclick=()=>{
+
+toggleMyCourse(key);
+
+const nowAdded=
+myCourse.includes(key);
+
+addBtn.textContent=
+nowAdded
+?'✓ 내 코스에 담겼어요'
+:'+ 내 코스에 담기';
+
+addBtn.classList.toggle(
+'added',
+nowAdded
+);
+
+};
